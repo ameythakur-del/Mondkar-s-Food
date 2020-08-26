@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mondkar\'s Food</string>
+    <string name="menu_home">Home</string>
+    <string name="signout">signout</string>
+    <string name="Rs">\u20B9</string>
+    <string name="channel_name">Mondkar\'s Food</string>
+    <string name="channel_description">Thank you !</string>
+</resources>

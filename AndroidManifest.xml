@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mondkars.mondkarsproduct">
+
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <activity android:name="com.mondkars.mondkarsproduct.Update"
+            android:theme="@style/UpdateActivity">
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.TrackActivity"
+            android:theme="@style/TrackActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.TrackActivity" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.ConfirmActivity"
+            android:theme="@style/ConfirmActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.ConfirmActivity" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.CouponActivity"
+            android:theme="@style/CouponActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.CouponActivity" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.ForgetPassword"
+            android:theme="@style/ForgetPassword">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.AboutUsFragment" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.ChangeAddress"
+            android:theme="@style/ChangeAddress">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.ChangeAddress" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.AboutUsFragment"
+            android:theme="@style/ColorTheme3">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.AboutUsFragment" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.ContactUs"
+            android:theme="@style/ColorTheme4">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.ContactUs" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.GalleryFragment"
+            android:theme="@style/ColorTheme5">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.GalleryFragment" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.MyCart"
+            android:theme="@style/ColorTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.MyCart" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.Activity3"
+            android:theme="@style/Activity3">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.Activity3" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.wishlist"
+            android:theme="@style/ColorTheme2">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.wishlist" />
+        </activity>
+        <activity
+            android:name="com.mondkars.mondkarsproduct.Activity2"
+            android:theme="@style/Activity2" />
+        <activity
+            android:name="com.mondkars.mondkarsproduct.Main2Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.mondkars.mondkarsproduct.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
