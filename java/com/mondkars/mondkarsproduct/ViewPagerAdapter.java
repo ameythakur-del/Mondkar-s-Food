@@ -20,7 +20,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int position)
+    {
         return fragmentList.get(position);
     }
 
@@ -38,5 +39,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public void AddFragment(Fragment fragment, String Title){
         fragmentList.add(fragment);
         FragmentListTitles.add(Title);
+        notifyDataSetChanged();
     }
 }

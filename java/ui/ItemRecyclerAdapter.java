@@ -19,6 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.mondkars.mondkarsproduct.MyCart;
 import com.mondkars.mondkarsproduct.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -158,7 +161,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         public Button button, buy;
         public FirebaseAuth firebaseAuth;
         public ElegantNumberButton quantity;
-
+        DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Stop");
         public ImageButton image;
 
         public ViewHolder(@NonNull View itemView, Context ctx) {
@@ -197,70 +200,85 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         public void onClick(View v) {
             if (v == button) {
                 int position = getAdapterPosition();
-                Item item = itemList.get(position);
+                final Item item = itemList.get(position);
                 if (user != null) {
-                    if (item.getAvailable() != null) {
-                        if (item.getAvailable().equals("False")) {
-                            Toast.makeText(context, item.getItem() + " is not available right now !", Toast.LENGTH_LONG).show();
-                        } else if (number != null) {
-                            final String name = item.getItem();
-                            final String taste = item.getTaste();
-                            final String price = item.getPrice();
-                            final String deliviery = item.getDelivery();
-                            final String category = item.getCategory();
-                            final String imageUrl = item.getImageUrl();
-                            final String per = item.getPer();
-                            final String Number = number;
-                            final String userId = currentUserId;
-                            CartItem cartItem = new CartItem();
-                            cartItem.setItem(name);
-                            cartItem.setTaste(taste);
-                            cartItem.setPrice(price);
-                            cartItem.setPer(per);
-                            cartItem.setImageUrl(imageUrl);
-                            cartItem.setCategory(category);
-                            cartItem.setDelivery(deliviery);
-                            cartItem.setNumber(number);
-                            cartItem.setUserId(user.getUid().toString());
-                            String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                            cartItem.setTime(currentDateTimeString);
-                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
-                            databaseReference.setValue(cartItem);
-                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
+                    data.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue().toString().equals("True")){
+                                Toast.makeText(context, "Sorry! We are not serving now", Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                if (item.getAvailable() != null) {
+                                    if (item.getAvailable().equals("False")) {
+                                        Toast.makeText(context, item.getItem() + " is not available right now !", Toast.LENGTH_LONG).show();
+                                    } else if (number != null) {
+                                        final String name = item.getItem();
+                                        final String taste = item.getTaste();
+                                        final String price = item.getPrice();
+                                        final String deliviery = item.getDelivery();
+                                        final String category = item.getCategory();
+                                        final String imageUrl = item.getImageUrl();
+                                        final String per = item.getPer();
+                                        final String Number = number;
+                                        final String userId = currentUserId;
+                                        CartItem cartItem = new CartItem();
+                                        cartItem.setItem(name);
+                                        cartItem.setTaste(taste);
+                                        cartItem.setPrice(price);
+                                        cartItem.setPer(per);
+                                        cartItem.setImageUrl(imageUrl);
+                                        cartItem.setCategory(category);
+                                        cartItem.setDelivery(deliviery);
+                                        cartItem.setNumber(number);
+                                        cartItem.setUserId(user.getUid().toString());
+                                        String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                                        cartItem.setTime(currentDateTimeString);
+                                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                        databaseReference.setValue(cartItem);
+                                        Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                                else {
+                                    if (number != null) {
+                                        final String name = item.getItem();
+                                        final String taste = item.getTaste();
+                                        final String price = item.getPrice();
+                                        final String deliviery = item.getDelivery();
+                                        final String category = item.getCategory();
+                                        final String imageUrl = item.getImageUrl();
+                                        final String per = item.getPer();
+                                        final String Number = number;
+                                        final String userId = currentUserId;
+                                        CartItem cartItem = new CartItem();
+                                        cartItem.setItem(name);
+                                        cartItem.setTaste(taste);
+                                        cartItem.setPrice(price);
+                                        cartItem.setPer(per);
+                                        cartItem.setImageUrl(imageUrl);
+                                        cartItem.setCategory(category);
+                                        cartItem.setDelivery(deliviery);
+                                        cartItem.setNumber(number);
+                                        cartItem.setUserId(user.getUid().toString());
+                                        String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                                        cartItem.setTime(currentDateTimeString);
+                                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                        databaseReference.setValue(cartItem);
+                                        Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
                         }
-                    }
-                    else {
-                        if (number != null) {
-                        final String name = item.getItem();
-                        final String taste = item.getTaste();
-                        final String price = item.getPrice();
-                        final String deliviery = item.getDelivery();
-                        final String category = item.getCategory();
-                        final String imageUrl = item.getImageUrl();
-                        final String per = item.getPer();
-                        final String Number = number;
-                        final String userId = currentUserId;
-                        CartItem cartItem = new CartItem();
-                        cartItem.setItem(name);
-                        cartItem.setTaste(taste);
-                        cartItem.setPrice(price);
-                        cartItem.setPer(per);
-                        cartItem.setImageUrl(imageUrl);
-                        cartItem.setCategory(category);
-                        cartItem.setDelivery(deliviery);
-                        cartItem.setNumber(number);
-                        cartItem.setUserId(user.getUid().toString());
-                        String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                        cartItem.setTime(currentDateTimeString);
-                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
-                        databaseReference.setValue(cartItem);
-                        Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
-                    }
-                    }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 } else {
                     Toast.makeText(context, "You need to log in first !", Toast.LENGTH_LONG).show();
                     ((Activity)context).finish();
@@ -268,73 +286,88 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             }
             if (v == buy) {
                 int position = getAdapterPosition();
-                Item item = itemList.get(position);
+                final Item item = itemList.get(position);
                     if (user != null) {
-                        if (item.getAvailable() != null) {
-                            if (item.getAvailable().equals("False")) {
-                                Toast.makeText(context, item.getItem() + " is not available right now !", Toast.LENGTH_LONG).show();
+                        data.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue().toString().equals("True")){
+                                    Toast.makeText(context, "Sorry, We are not serving now", Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    if (item.getAvailable() != null) {
+                                        if (item.getAvailable().equals("False")) {
+                                            Toast.makeText(context, item.getItem() + " is not available right now !", Toast.LENGTH_LONG).show();
+                                        }
+                                        else if (number != null) {
+                                            final String name = item.getItem();
+                                            final String taste = item.getTaste();
+                                            final String price = item.getPrice();
+                                            final String deliviery = item.getDelivery();
+                                            final String category = item.getCategory();
+                                            final String imageUrl = item.getImageUrl();
+                                            final String per = item.getPer();
+                                            final String Number = number;
+                                            final String userId = currentUserId;
+                                            CartItem cartItem = new CartItem();
+                                            cartItem.setItem(name);
+                                            cartItem.setTaste(taste);
+                                            cartItem.setPrice(price);
+                                            cartItem.setPer(per);
+                                            cartItem.setImageUrl(imageUrl);
+                                            cartItem.setCategory(category);
+                                            cartItem.setDelivery(deliviery);
+                                            cartItem.setNumber(number);
+                                            cartItem.setUserId(user.getUid().toString());
+                                            String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                                            cartItem.setTime(currentDateTimeString);
+                                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                            databaseReference.setValue(cartItem);
+                                            context.startActivity(new Intent(context, MyCart.class));
+                                        }
+                                        else {
+                                            Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    else {
+                                        if (number != null) {
+                                            final String name = item.getItem();
+                                            final String taste = item.getTaste();
+                                            final String price = item.getPrice();
+                                            final String deliviery = item.getDelivery();
+                                            final String category = item.getCategory();
+                                            final String imageUrl = item.getImageUrl();
+                                            final String per = item.getPer();
+                                            final String Number = number;
+                                            final String userId = currentUserId;
+                                            CartItem cartItem = new CartItem();
+                                            cartItem.setItem(name);
+                                            cartItem.setTaste(taste);
+                                            cartItem.setPrice(price);
+                                            cartItem.setPer(per);
+                                            cartItem.setImageUrl(imageUrl);
+                                            cartItem.setCategory(category);
+                                            cartItem.setDelivery(deliviery);
+                                            cartItem.setNumber(number);
+                                            cartItem.setUserId(user.getUid().toString());
+                                            String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                                            cartItem.setTime(currentDateTimeString);
+                                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                            databaseReference.setValue(cartItem);
+                                            context.startActivity(new Intent(context, MyCart.class));
+                                        }
+                                        else {
+                                            Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
                             }
-                            else if (number != null) {
-                                final String name = item.getItem();
-                                final String taste = item.getTaste();
-                                final String price = item.getPrice();
-                                final String deliviery = item.getDelivery();
-                                final String category = item.getCategory();
-                                final String imageUrl = item.getImageUrl();
-                                final String per = item.getPer();
-                                final String Number = number;
-                                final String userId = currentUserId;
-                                CartItem cartItem = new CartItem();
-                                cartItem.setItem(name);
-                                cartItem.setTaste(taste);
-                                cartItem.setPrice(price);
-                                cartItem.setPer(per);
-                                cartItem.setImageUrl(imageUrl);
-                                cartItem.setCategory(category);
-                                cartItem.setDelivery(deliviery);
-                                cartItem.setNumber(number);
-                                cartItem.setUserId(user.getUid().toString());
-                                String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                                cartItem.setTime(currentDateTimeString);
-                                databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
-                                databaseReference.setValue(cartItem);
-                                context.startActivity(new Intent(context, MyCart.class));
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
-                            else {
-                                Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        else {
-                             if (number != null) {
-                                final String name = item.getItem();
-                                final String taste = item.getTaste();
-                                final String price = item.getPrice();
-                                final String deliviery = item.getDelivery();
-                                final String category = item.getCategory();
-                                final String imageUrl = item.getImageUrl();
-                                final String per = item.getPer();
-                                final String Number = number;
-                                final String userId = currentUserId;
-                                CartItem cartItem = new CartItem();
-                                cartItem.setItem(name);
-                                cartItem.setTaste(taste);
-                                cartItem.setPrice(price);
-                                cartItem.setPer(per);
-                                cartItem.setImageUrl(imageUrl);
-                                cartItem.setCategory(category);
-                                cartItem.setDelivery(deliviery);
-                                cartItem.setNumber(number);
-                                cartItem.setUserId(user.getUid().toString());
-                                String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                                cartItem.setTime(currentDateTimeString);
-                                databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
-                                databaseReference.setValue(cartItem);
-                                context.startActivity(new Intent(context, MyCart.class));
-                            }
-                            else {
-                                Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
-                            }
-                        }
+                        });
                     } else {
                         Toast.makeText(context, "You need to log in first !", Toast.LENGTH_LONG).show();
                         ((Activity)context).finish();

@@ -2,6 +2,7 @@ package com.mondkars.mondkarsproduct;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,12 +37,19 @@ public class CouponActivity extends AppCompatActivity {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
     ProgressBar progressBar;
     TextView textView;
+    View v1, v2, v3, v4;
+    CardView cardi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
+        cardi = findViewById(R.id.cardi);
+        v1 = findViewById(R.id.vi1);
+        v2 = findViewById(R.id.vi2);
+        v3 = findViewById(R.id.vi3);
+        v4 = findViewById(R.id.vi4);
         progressBar = findViewById(R.id.progress_bar);
         couponList = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("Special users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -90,11 +98,16 @@ public class CouponActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                         textView.setVisibility(View.VISIBLE);
                         searchView.setVisibility(View.INVISIBLE);
-
+                        v1.setVisibility(View.INVISIBLE);
+                        v2.setVisibility(View.INVISIBLE);
+                        v3.setVisibility(View.INVISIBLE);
+                        v4.setVisibility(View.INVISIBLE);
+                        cardi.setVisibility(View.INVISIBLE);
                     } else {
                         couponRecyclerAdapter = new CouponRecyclerAdapter(CouponActivity.this, couponList);
                         progressBar.setVisibility(View.INVISIBLE);
                         recyclerView2.setAdapter(couponRecyclerAdapter);
+                        couponRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -108,6 +121,7 @@ public class CouponActivity extends AppCompatActivity {
                     public boolean onQueryTextChange(String newText) {
                         couponRecyclerAdapter.getFilter().filter(newText);
                         recyclerView2.setAdapter(couponRecyclerAdapter);
+                        couponRecyclerAdapter.notifyDataSetChanged();
                         return true;
                     }
                 });

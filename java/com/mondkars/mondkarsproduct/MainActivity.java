@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     Timer timer;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Version");
+    TextView speed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue().toString().equals("2")) {
+                        if (dataSnapshot.getValue().toString().equals("4")) {
                             Intent intent = new Intent(MainActivity.this, Activity2.class);
                             startActivity(intent);
                             startActivity(new Intent(MainActivity.this, Main2Activity.class));

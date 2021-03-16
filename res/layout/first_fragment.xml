@@ -36,7 +36,7 @@
             app:sliderIndicatorRadius="2dp"
             app:sliderIndicatorSelectedColor="#5A5A5A"
             app:sliderIndicatorUnselectedColor="#FFF"
-            app:sliderScrollTimeInSec="3"
+            app:sliderScrollTimeInSec="4"
             app:sliderStartAutoCycle="true" />
         <TextView
             android:visibility="gone"
@@ -700,6 +700,38 @@
 
         <TextView
             android:visibility="gone"
+            android:id="@+id/text24"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Smoothie"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
+        <View
+            android:visibility="gone"
+            android:id="@+id/v24"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#c0c0c0" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/view24"
+            android:nestedScrollingEnabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:visibility="gone"
             android:id="@+id/text12"
             android:textAllCaps="true"
             android:fontFamily="sans-serif"
@@ -730,6 +762,37 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/text23"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="One-day prior orders"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
+        <View
+            android:visibility="gone"
+            android:id="@+id/v23"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#c0c0c0" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/view23"
+            android:nestedScrollingEnabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

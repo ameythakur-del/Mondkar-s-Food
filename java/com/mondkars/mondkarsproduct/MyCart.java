@@ -261,6 +261,7 @@ public class MyCart extends AppCompatActivity {
                                             cartRecyclerAdapter = new CartRecyclerAdapter(MyCart.this, myCart);
                                             progressBar.setVisibility(View.INVISIBLE);
                                             recyclerView.setAdapter(cartRecyclerAdapter);
+                                            cartRecyclerAdapter.notifyDataSetChanged();
                                             card1.setVisibility(View.VISIBLE);
                                             card2.setVisibility(View.VISIBLE);
                                         }

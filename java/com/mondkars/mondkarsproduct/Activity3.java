@@ -49,6 +49,7 @@ public class Activity3 extends AppCompatActivity implements View.OnClickListener
     private CollectionReference collectionReference = db.collection("Registering users");
     String codeSent;
     int c=0;
+    String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,6 @@ public class Activity3 extends AppCompatActivity implements View.OnClickListener
               input.setTextColor(Color.BLACK);
                 builder.setView(input);
 
-// Set up the buttons
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -99,76 +99,83 @@ public class Activity3 extends AppCompatActivity implements View.OnClickListener
                         progressDialog.show();
                         String m_Text = "";
                         m_Text = input.getText().toString();
-                        {
-                            collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
+                        if (m_Text.equals(code)){
+                            {
+                                collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
 
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if (document.getString("Mobile").equals(Mobile)) {
-                                                c++;
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if (document.getString("Mobile").equals(Mobile)) {
+                                                    c++;
+                                                }
                                             }
-                                        }
-                                        if (c > 0) {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(Activity3.this, "You have already created the account with the same number", Toast.LENGTH_LONG).show();
-                                            c = 0;
-                                        } else {
+                                            if (c > 0) {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(Activity3.this, "You have already created the account with the same number", Toast.LENGTH_LONG).show();
+                                                c = 0;
+                                            } else {
 
-                                            {
-                                                firebaseAuth.createUserWithEmailAndPassword(Username, Password)
-                                                        .addOnCompleteListener(Activity3.this, new OnCompleteListener<AuthResult>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    // Sign in success, update UI with the signed-in user's information
-                                                                    currentUser = firebaseAuth.getCurrentUser();
-                                                                    assert currentUser != null;
-                                                                    final String currentUserId = currentUser.getUid();
-                                                                    Map<String, String> userObj = new HashMap<>();
-                                                                    userObj.put("Name", Name);
-                                                                    userObj.put("Username", Username);
-                                                                    userObj.put("UserId", currentUserId);
-                                                                    userObj.put("Mobile", Mobile);
-                                                                    userObj.put("Alternate mobile", Alternate);
-                                                                    userObj.put("Address", Address);
+                                                {
+                                                    firebaseAuth.createUserWithEmailAndPassword(Username, Password)
+                                                            .addOnCompleteListener(Activity3.this, new OnCompleteListener<AuthResult>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        // Sign in success, update UI with the signed-in user's information
+                                                                        currentUser = firebaseAuth.getCurrentUser();
+                                                                        assert currentUser != null;
+                                                                        final String currentUserId = currentUser.getUid();
+                                                                        Map<String, String> userObj = new HashMap<>();
+                                                                        userObj.put("Name", Name);
+                                                                        userObj.put("Username", Username);
+                                                                        userObj.put("UserId", currentUserId);
+                                                                        userObj.put("Mobile", Mobile);
+                                                                        userObj.put("Alternate mobile", Alternate);
+                                                                        userObj.put("Address", Address);
 
-                                                                    collectionReference.document(currentUserId).set(userObj);
+                                                                        collectionReference.document(currentUserId).set(userObj);
 
-                                                                    Users users = Users.getInstance();
-                                                                    users.setName(Name);
-                                                                    users.setUserId(currentUserId);
-                                                                    users.setMobile(Mobile);
-                                                                    users.setAlternate(Alternate);
-                                                                    users.setAddress(Address);
-                                                                    Toast.makeText(Activity3.this, "Your account is created successfully.", Toast.LENGTH_LONG).show();
-                                                                    progressDialog.dismiss();
-                                                                    finish();
-                                                                    Intent intent = new Intent(Activity3.this, Main2Activity.class);
-                                                                    startActivity(intent);
-                                                                    // ...
-                                                                } else {
-                                                                    {
-                                                                        Toast.makeText(Activity3.this, "Something wrong happened", Toast.LENGTH_LONG).show();
+                                                                        Users users = Users.getInstance();
+                                                                        users.setName(Name);
+                                                                        users.setUserId(currentUserId);
+                                                                        users.setMobile(Mobile);
+                                                                        users.setAlternate(Alternate);
+                                                                        users.setAddress(Address);
+                                                                        Toast.makeText(Activity3.this, "Your account is created successfully.", Toast.LENGTH_LONG).show();
                                                                         progressDialog.dismiss();
+                                                                        finish();
+                                                                        Intent intent = new Intent(Activity3.this, Main2Activity.class);
+                                                                        startActivity(intent);
+                                                                        // ...
+                                                                    } else {
+                                                                        {
+                                                                            Toast.makeText(Activity3.this, "Something wrong happened", Toast.LENGTH_LONG).show();
+                                                                            progressDialog.dismiss();
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        });
+                                                            });
+                                                }
+
                                             }
-
                                         }
+
+                                        // Log.d(TAG, document.getId() + " => " + document.getData());
+
+
                                     }
-
-                                    // Log.d(TAG, document.getId() + " => " + document.getData());
-
-
-                                }
-                            });
+                                });
 
 
+                            }
                         }
+                        else {
+                            progressDialog.dismiss();
+                            Toast.makeText(Activity3.this, "Please enter the valid OTP", Toast.LENGTH_LONG).show();
+                        }
+
                     }
 
                 });
@@ -251,12 +258,13 @@ public class Activity3 extends AppCompatActivity implements View.OnClickListener
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
             progressDialog.dismiss();
+            code = phoneAuthCredential.getSmsCode();
         }
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
            progressDialog.dismiss();
-           Toast.makeText(Activity3.this, "You have crosses the limit of number of mobile verifications. Try after some time", Toast.LENGTH_LONG).show();
+           Toast.makeText(Activity3.this, "You have crossed the limit of number of mobile verifications. Try after some time", Toast.LENGTH_LONG).show();
         }
 
 

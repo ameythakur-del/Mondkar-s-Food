@@ -63,22 +63,12 @@ public class HomeFragment extends Fragment {
         v2.setVisibility(View.VISIBLE);
         v3.setVisibility(View.VISIBLE);
         v4.setVisibility(View.VISIBLE);
-        data.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue().toString().equals("True")) {
-                    v1.setVisibility(View.INVISIBLE);
-                    v2.setVisibility(View.INVISIBLE);
-                    v3.setVisibility(View.INVISIBLE);
-                    v4.setVisibility(View.INVISIBLE);
-                    searchView.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    tabLayout.setVisibility(View.INVISIBLE);
-                    viewPager.setVisibility(View.INVISIBLE);
-                    noimage.setVisibility(View.VISIBLE);
-                    notext.setVisibility(View.VISIBLE);
-                    nowarning.setVisibility(View.VISIBLE);
-                } else {
+        {
+               {
+                    v1.setVisibility(View.VISIBLE);
+                    v2.setVisibility(View.VISIBLE);
+                    v3.setVisibility(View.VISIBLE);
+                    v4.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.VISIBLE);
                     viewPager.setVisibility(View.VISIBLE);
                     noimage.setVisibility(View.INVISIBLE);
@@ -100,6 +90,7 @@ public class HomeFragment extends Fragment {
                             adapter.AddFragment(new ThirdFragment(), special);
 
                             viewPager.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                             progressBar.setVisibility(View.INVISIBLE);
                             tabLayout.setupWithViewPager(viewPager);
                         }
@@ -144,6 +135,7 @@ public class HomeFragment extends Fragment {
                                             public boolean onQueryTextChange(String newText) {
                                                 itemRecyclerAdapter.getFilter().filter(newText);
                                                 recyclerView.setAdapter(itemRecyclerAdapter);
+                                                itemRecyclerAdapter.notifyDataSetChanged();
                                                 return true;
                                             }
                                         });
@@ -158,11 +150,6 @@ public class HomeFragment extends Fragment {
                     }
                 }
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         return view;
     }
     }

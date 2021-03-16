@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,14 +35,16 @@ import ui.SliderAdapterExample;
 
 public class FirstFragment extends Fragment {
     public List<Item> itemList;
-    public RecyclerView recyclerView, recyclerView2, recyclerView3, recyclerView4, recyclerView5, recyclerView6, recyclerView7, recyclerView8,recyclerView9,recyclerView10, recyclerView11, recyclerView12, recyclerView13, recyclerView14,  recyclerView15,  recyclerView16,  recyclerView17,  recyclerView18,  recyclerView19,  recyclerView20,  recyclerView21,  recyclerView22;
+    public RecyclerView recyclerView, recyclerView2, recyclerView3, recyclerView4, recyclerView5, recyclerView6, recyclerView7, recyclerView8,recyclerView9,recyclerView10, recyclerView11, recyclerView12, recyclerView13, recyclerView14,  recyclerView15,  recyclerView16,  recyclerView17,  recyclerView18,  recyclerView19,  recyclerView20,  recyclerView21,  recyclerView22, recyclerView23, recyclerView24;
     public ItemRecyclerAdapter itemRecyclerAdapter;
     public SliderView horizontal;
     public List<Image> snacksList;
     private ProgressBar progressBar;
-    DatabaseReference reference, reference2;
-    TextView text1, text2, text3, text4, text5, text6, text7,text8, text9, text10, text11, text12, text13, text14, text15, text16, text17, text18, text19, text20, text21, text22;
-    View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14, view15, view16, view17, view18, view19, view20, view21, view22;
+    DatabaseReference reference, reference2, reference3;
+    TextView text1, text2, text3, text4, text5, text6, text7,text8, text9, text10, text11, text12, text13, text14, text15, text16, text17, text18, text19, text20, text21, text22, text23, text24;
+    View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14, view15, view16, view17, view18, view19, view20, view21, view22, view23, view24;
+    DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Stop");
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,6 +78,8 @@ public class FirstFragment extends Fragment {
         recyclerView20 = view.findViewById(R.id.view20);
         recyclerView21 = view.findViewById(R.id.view21);
         recyclerView22 = view.findViewById(R.id.view22);
+        recyclerView23 = view.findViewById(R.id.view23);
+        recyclerView24 = view.findViewById(R.id.view24);
 
             reference2 = FirebaseDatabase.getInstance().getReference().child("Snacks");
             reference = FirebaseDatabase.getInstance().getReference().child("items");
@@ -100,6 +105,8 @@ public class FirstFragment extends Fragment {
         Query query20 = reference.orderByChild("subcategory").equalTo("Pasta");
         Query query21 = reference.orderByChild("subcategory").equalTo("Shakes");
         Query query22 = reference.orderByChild("subcategory").equalTo("Mojito");
+        Query query23 = reference.orderByChild("subcategory").equalTo("One");
+        Query query24 = reference.orderByChild("subcategory").equalTo("Smoothie");
 
             recyclerView.setHasFixedSize(true);
             recyclerView2.setHasFixedSize(true);
@@ -123,6 +130,8 @@ public class FirstFragment extends Fragment {
         recyclerView20.setHasFixedSize(true);
         recyclerView21.setHasFixedSize(true);
         recyclerView22.setHasFixedSize(true);
+        recyclerView23.setHasFixedSize(true);
+        recyclerView24.setHasFixedSize(true);
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -146,6 +155,8 @@ public class FirstFragment extends Fragment {
         recyclerView20.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView21.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView22.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView23.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView24.setLayoutManager(new LinearLayoutManager(getActivity()));
 
             text1 = view.findViewById(R.id.text1);
             text2 = view.findViewById(R.id.text2);
@@ -169,6 +180,8 @@ public class FirstFragment extends Fragment {
         text20 = view.findViewById(R.id.text20);
         text21 = view.findViewById(R.id.text21);
         text22 = view.findViewById(R.id.text22);
+        text23 = view.findViewById(R.id.text23);
+        text24 = view.findViewById(R.id.text24);
 
         view1 = view.findViewById(R.id.v1);
         view2 = view.findViewById(R.id.v2);
@@ -192,39 +205,90 @@ public class FirstFragment extends Fragment {
         view20 = view.findViewById(R.id.v20);
         view21 = view.findViewById(R.id.v21);
         view22 = view.findViewById(R.id.v22);
+        view23 = view.findViewById(R.id.v23);
+        view24 = view.findViewById(R.id.v24);
 
+        reference3 = FirebaseDatabase.getInstance().getReference().child("Off Tag");
             final LinearLayoutManager layoutManager
                     = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-            {
-                {
-                    {
-                        reference2.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                snacksList = new ArrayList<Image>();
-                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    {
-                                        final Image image = dataSnapshot1.getValue(Image.class);
-                                        {
-                                            snacksList.add(image);
+            data.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue().toString().equals("True")){
+                        {
+                            {
+                                {
+                                    reference3.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            snacksList = new ArrayList<Image>();
+                                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                                {
+                                                    final Image image = dataSnapshot1.getValue(Image.class);
+                                                    {
+                                                        snacksList.add(image);
+                                                    }
+                                                }
+                                            }
+                                            SliderAdapterExample sliderAdapterExample = new SliderAdapterExample(getActivity(), snacksList);
+                                            horizontal.setSliderAdapter(sliderAdapterExample);
+                                            sliderAdapterExample.notifyDataSetChanged();
+                                            horizontal.startAutoCycle();
+                                            horizontal.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
+                                            horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
+                                            horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
                                         }
-                                    }
-                                }
-                                horizontal.setSliderAdapter(new SliderAdapterExample(getActivity(), snacksList));
-                                horizontal.startAutoCycle();
-                                horizontal.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-                                horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
-                                horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
                             }
-                        });
+                        }
+                    }
+
+                    else{
+                        {
+                            {
+                                {
+                                    reference2.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            snacksList = new ArrayList<Image>();
+                                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                                {
+                                                    final Image image = dataSnapshot1.getValue(Image.class);
+                                                    {
+                                                        snacksList.add(image);
+                                                    }
+                                                }
+                                            }
+                                            SliderAdapterExample sliderAdapterExample = new SliderAdapterExample(getActivity(), snacksList);
+                                            horizontal.setSliderAdapter(sliderAdapterExample);
+                                            sliderAdapterExample.notifyDataSetChanged();
+                                            horizontal.startAutoCycle();
+                                            horizontal.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
+                                            horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
+                                            horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
-            }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
             {
                 {
                     {
@@ -250,6 +314,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -281,6 +346,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView2.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -312,6 +378,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView3.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -342,6 +409,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView4.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -372,6 +440,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView5.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -402,6 +471,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView6.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -432,6 +502,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView7.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -462,6 +533,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView8.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -492,6 +564,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView9.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -522,6 +595,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView10.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -552,6 +626,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView11.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -582,6 +657,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView12.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -612,6 +688,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView13.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -643,6 +720,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView14.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -674,6 +752,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView15.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -705,6 +784,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView16.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -736,6 +816,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView18.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -767,6 +848,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView19.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -798,6 +880,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView20.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -829,6 +912,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView21.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -860,6 +944,71 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView22.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    }
+                    {
+                        query23.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                itemList = new ArrayList<Item>();
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                    {
+                                        Item ameya = dataSnapshot1.getValue(Item.class);
+
+                                        if(dataSnapshot1.child("category").exists())  {
+                                            if (ameya.getCategory().equals("Snacks")) {
+                                                itemList.add(ameya);
+                                            }
+                                        }
+                                    }
+                                }
+                                if (itemList.toString() != "[]"){
+                                    text23.setVisibility(View.VISIBLE);
+                                    view23.setVisibility(View.VISIBLE);
+                                    recyclerView23.setVisibility(View.VISIBLE);
+                                }
+                                itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                recyclerView23.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    }
+                    {
+                        query24.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                itemList = new ArrayList<Item>();
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                    {
+                                        Item ameya = dataSnapshot1.getValue(Item.class);
+
+                                        if(dataSnapshot1.child("category").exists())  {
+                                            if (ameya.getCategory().equals("Snacks")) {
+                                                itemList.add(ameya);
+                                            }
+                                        }
+                                    }
+                                }
+                                if (itemList.toString() != "[]"){
+                                    text24.setVisibility(View.VISIBLE);
+                                    view24.setVisibility(View.VISIBLE);
+                                    recyclerView24.setVisibility(View.VISIBLE);
+                                }
+                                itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                recyclerView24.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -891,6 +1040,7 @@ public class FirstFragment extends Fragment {
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView17.setAdapter(itemRecyclerAdapter);
+                                itemRecyclerAdapter.notifyDataSetChanged();
                             }
 
                             @Override

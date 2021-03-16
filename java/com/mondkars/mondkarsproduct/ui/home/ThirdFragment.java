@@ -36,9 +36,11 @@ public class ThirdFragment extends Fragment {
     public RecyclerView recyclerView;
     public ItemRecyclerAdapter itemRecyclerAdapter;
     private ProgressBar progressBar;
-    DatabaseReference reference, reference2;
+    DatabaseReference reference, reference2, reference3;
     public SliderView horizontal;
     public List<Image> snacksList;
+    DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Stop");
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,36 +63,86 @@ public class ThirdFragment extends Fragment {
 
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        {
-            {
-                {
-                    reference2.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            snacksList = new ArrayList<Image>();
-                            for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) {
-                                {
-                                    final Image image = dataSnapshot1.getValue(Image.class);
-                                    {
-                                        snacksList.add(image);
-                                    }
-                                }
-                            }
-                            horizontal.setSliderAdapter(new SliderAdapterExample(getActivity(), snacksList));
-                            horizontal.startAutoCycle();
-                            horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
-                            horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(getActivity(), "Nay hote", Toast.LENGTH_LONG).show();
+        reference3 = FirebaseDatabase.getInstance().getReference().child("Off Tag");
+        LinearLayoutManager ilayoutManager
+                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue().toString().equals("True")) {
+                    {
+                        {
+                            {
+                                reference3.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        snacksList = new ArrayList<Image>();
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            {
+                                                final Image image = dataSnapshot1.getValue(Image.class);
+                                                {
+                                                    snacksList.add(image);
+                                                }
+                                            }
+                                        }
+                                        SliderAdapterExample sliderAdapterExample = new SliderAdapterExample(getActivity(), snacksList);
+                                        horizontal.setSliderAdapter(sliderAdapterExample);
+                                        sliderAdapterExample.notifyDataSetChanged();
+                                        horizontal.startAutoCycle();
+                                        horizontal.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
+                                        horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
+                                        horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+                            }
                         }
-                    });
+                    }
+                } else {
+                    {
+                        {
+                            {
+                                reference2.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        snacksList = new ArrayList<Image>();
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            {
+                                                final Image image = dataSnapshot1.getValue(Image.class);
+                                                {
+                                                    snacksList.add(image);
+                                                }
+                                            }
+                                        }
+                                        SliderAdapterExample sliderAdapterExample = new SliderAdapterExample(getActivity(), snacksList);
+                                        horizontal.setSliderAdapter(sliderAdapterExample);
+                                        sliderAdapterExample.notifyDataSetChanged();
+                                        horizontal.startAutoCycle();
+                                        horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
+                                        horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(getActivity(), "Nay hote", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        }
+                    }
                 }
             }
-        }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         {
             {
                 {
@@ -111,6 +163,7 @@ public class ThirdFragment extends Fragment {
                             itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                             progressBar.setVisibility(View.INVISIBLE);
                             recyclerView.setAdapter(itemRecyclerAdapter);
+                            itemRecyclerAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -123,7 +176,7 @@ public class ThirdFragment extends Fragment {
             return view;
         }
     }
-}
+        }
 
 
 

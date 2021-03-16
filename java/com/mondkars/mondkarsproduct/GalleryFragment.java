@@ -263,6 +263,7 @@ public class GalleryFragment extends AppCompatActivity {
                                     progressBar.setVisibility(View.INVISIBLE);
                                     orderRecyclerAdapter = new OrderRecyclerAdapter(GalleryFragment.this, myOrders);
                                     recyclerView.setAdapter(orderRecyclerAdapter);
+                                    orderRecyclerAdapter.notifyDataSetChanged();
                                 }
                             }
 

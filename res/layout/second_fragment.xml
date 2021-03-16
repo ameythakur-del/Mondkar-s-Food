@@ -39,7 +39,7 @@
                 app:sliderIndicatorRadius="2dp"
                 app:sliderIndicatorSelectedColor="#5A5A5A"
                 app:sliderIndicatorUnselectedColor="#FFF"
-                app:sliderScrollTimeInSec="3"
+                app:sliderScrollTimeInSec="4"
                 app:sliderStartAutoCycle="true"  />
 
             <androidx.recyclerview.widget.RecyclerView

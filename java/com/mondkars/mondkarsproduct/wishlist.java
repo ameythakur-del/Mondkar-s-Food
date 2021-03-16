@@ -65,6 +65,7 @@ public class wishlist extends AppCompatActivity {
                             wishRecyclerAdapter = new WishRecyclerAdapter(wishlist.this, wishList);
                             progressBar.setVisibility(View.INVISIBLE);
                             recyclerView.setAdapter(wishRecyclerAdapter);
+                            wishRecyclerAdapter.notifyDataSetChanged();
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
