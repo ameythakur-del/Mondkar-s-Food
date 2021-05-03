@@ -350,11 +350,30 @@ public class MyCart extends AppCompatActivity {
                                 }
                             });
                 }
+                Query query = reference.orderByChild("userId").equalTo(currentUserId);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            myCart = new ArrayList<CartItem>();
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            {
+                                dataSnapshot1.getRef().removeValue();
+                            }
+                        }
+                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                    });
+
                 Intent fintent = new Intent(getBaseContext(), GalleryFragment.class);
                 fintent.putExtra("PREVIOUS_ACTIVITY", this.getClass().getSimpleName());
                 startActivity(fintent);
                 finish();
             }
+
+
             if (resultCode == RESULT_FIRST_USER) {
 
                 for (CartItem cartItem : myCart){
@@ -397,6 +416,24 @@ public class MyCart extends AppCompatActivity {
                                 }
                             });
                 }
+
+                Query query = reference.orderByChild("userId").equalTo(currentUserId);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            myCart = new ArrayList<CartItem>();
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            {
+                                dataSnapshot1.getRef().removeValue();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 Intent fintent = new Intent(getBaseContext(), GalleryFragment.class);
                 fintent.putExtra("PREVIOUS_ACTIVITY", this.getClass().getSimpleName());
                 startActivity(fintent);

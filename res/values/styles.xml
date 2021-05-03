@@ -68,7 +68,7 @@
         <item name="colorAccent">#fa638c</item>
     </style>
 
-    <style name="Activity2" parent="Theme.AppCompat.Light">
+    <style name="Activity2" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">#b83d0f </item>
         <item name="title">Login</item>
         <item name="android:statusBarColor">#A52A2A</item>
@@ -76,9 +76,16 @@
         <item name="colorAccent">#fa638c</item>
     </style>
 
-    <style name="Activity3" parent="Theme.AppCompat.Light">
+    <style name="ActivityUserDetails" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <item name="colorPrimary">#b83d0f</item>
+        <item name="title">Enter your details</item>
+        <item name="android:statusBarColor">#A52A2A</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="colorAccent">#fa638c</item>
+    </style>
+    <style name="OTPActivity" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">#b83d0f </item>
-        <item name="title">Register</item>
+        <item name="title">Mobile Verification</item>
         <item name="android:statusBarColor">#A52A2A</item>
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorAccent">#fa638c</item>

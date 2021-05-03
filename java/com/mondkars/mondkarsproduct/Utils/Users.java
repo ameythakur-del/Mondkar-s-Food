@@ -4,8 +4,8 @@ import android.app.Application;
 
 public class Users extends Application {
     private String Name;
-    private String UserId;
-    private String Mobile, Address, Alternate;
+    private String UserNumber;
+    private String Address, Pincode;
     private static Users instance;
 
     public static Users getInstance(){
@@ -16,12 +16,12 @@ public class Users extends Application {
 
     public Users(){}
 
-    public String getAlternate() {
-        return Alternate;
+    public String getPincode() {
+        return Pincode;
     }
 
-    public void setAlternate(String alternate) {
-        Alternate = alternate;
+    public void setPincode(String pincode) {
+        Pincode = pincode;
     }
 
     public String getName() {
@@ -32,21 +32,14 @@ public class Users extends Application {
         this.Name = name;
     }
 
-    public String getUserId() {
-        return UserId;
+    public String getUserNumber() {
+        return UserNumber;
     }
 
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setUserNumber(String userNumber) {
+        UserNumber = userNumber;
     }
 
-    public String getMobile() {
-        return Mobile;
-    }
-
-    public void setMobile(String mobile) {
-        Mobile = mobile;
-    }
 
     public String getAddress() {
         return Address;

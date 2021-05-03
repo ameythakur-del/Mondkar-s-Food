@@ -13,6 +13,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -34,7 +35,7 @@ public class Main2Activity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private CollectionReference collectionReference = db.collection("Registering users");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String currentUserId;
+    String currentUserPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +60,29 @@ public class Main2Activity extends AppCompatActivity {
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Mondkars Food</font>"));
     }
 
+
     private void updateNavHeader() {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             user = FirebaseAuth.getInstance().getCurrentUser();
             {
-                currentUserId = user.getUid();
-               {
+                currentUserPhone = user.getPhoneNumber();
+                {
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                     View headerView = navigationView.getHeaderView(0);
                     final TextView navUsername = headerView.findViewById(R.id.nav_user_name);
 
+                    collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            {
+                                navUsername.setText(value.getString("Name"));
+                            }
+                        }
+                    });
+
                     collectionReference
-                            .whereEqualTo("UserId", currentUserId)
+                            .whereEqualTo("UserPhoneNumber", currentUserPhone)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -86,7 +97,7 @@ public class Main2Activity extends AppCompatActivity {
                                     }
                                 }
                             });
-               }
+                }
             }
         }
         else{
