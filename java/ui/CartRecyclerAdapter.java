@@ -90,6 +90,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
 
         public long countPosts = 0;
         public FirebaseAuth firebaseAuth;
+        String currentUserId;
         public FirebaseAuth.AuthStateListener authStateListener;
 
         public ImageButton image;
@@ -102,6 +103,9 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
             per = itemView.findViewById(R.id.per);
             quantity = itemView.findViewById(R.id.cart_quantity);
             firebaseAuth = FirebaseAuth.getInstance();
+            if(firebaseAuth != null){
+                currentUserId = firebaseAuth.getCurrentUser().getPhoneNumber();
+            }
             ietem = itemView.findViewById(R.id.cart_name_list);
             taste = itemView.findViewById(R.id.cart_characteristic_taste);
             price = itemView.findViewById(R.id.cart_price);
@@ -129,10 +133,10 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
                 wish.setPer(cartitem.getPer());
                 wish.setPrice(cartitem.getPrice());
                 wish.setTaste(cartitem.getTaste());
-                wish.setUserId(cartitem.getUserId());
+                wish.setUserId(currentUserId);
                 String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                 wish.setTime(currentDateTimeString);
-                databaseReference = FirebaseDatabase.getInstance().getReference().child("wish").child(cartitem.getUserId() + cartitem.getItem());
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("wish").child(currentUserId + cartitem.getItem());
                 databaseReference.setValue(wish);
                 progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(context, cartitem.getItem() + " is added to your wishlist", Toast.LENGTH_SHORT).show();
@@ -141,7 +145,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
             if (v == buy) {
                 int position = getAdapterPosition();
                 CartItem cartitem = myCart.get(position);
-                reference = FirebaseDatabase.getInstance().getReference().child("cart").child(cartitem.getUserId().toString() + cartitem.getItem());
+                reference = FirebaseDatabase.getInstance().getReference().child("cart").child(currentUserId + cartitem.getItem());
                 reference.removeValue();
                 ((Activity) context).recreate();
             }

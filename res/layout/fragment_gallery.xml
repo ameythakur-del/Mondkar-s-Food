@@ -209,10 +209,31 @@
                                 android:textColor="#000000" />
 
                             <TextView
-                                android:id="@+id/od"
+                                android:id="@+id/earning_discount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/coupon_discount"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:text="Your Earning"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/earning_discount_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/order_discount_price"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="20dp"
+                                android:text="\u20B90"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/od"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/earning_discount"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="10dp"
                                 android:text="Delivery charges"
@@ -222,7 +243,7 @@
                                 android:id="@+id/onum_charges"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/coupon_discount"
+                                android:layout_below="@+id/earning_discount_price"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="20dp"

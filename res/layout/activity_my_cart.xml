@@ -204,16 +204,18 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:layout_marginTop="10dp"
                         android:textColor="#000000"
-                        android:id="@+id/p"
+                        android:id="@+id/original_p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Price" />
+                        android:text="Original Price" />
 
                     <TextView
+                        android:layout_marginTop="10dp"
                         android:textColor="#000000"
-                        android:id="@+id/num_price"
+                        android:id="@+id/original_num_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -222,13 +224,13 @@
 
 
                     <TextView
+                        android:layout_marginTop="10dp"
                         android:textColor="#000000"
                         android:id="@+id/coupon_discount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/num_price"
+                        android:layout_below="@+id/original_p"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
                         android:text="Coupon Discount" />
 
                     <TextView
@@ -239,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="20dp"
-                        android:layout_below="@+id/num_price"
+                        android:layout_below="@+id/original_num_price"
                         android:text="\u20B90" />
 
                     <TextView
@@ -273,13 +275,14 @@
                         app:minimumDashGap="3dp"
                         android:layout_below="@+id/num_charges"/>
                     <TextView
+                        android:id="@+id/total_text"
                         android:layout_marginTop="10dp"
                         android:textColor="#000000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dashed"
                         android:layout_marginLeft="10dp"
-                        android:text="Total amount"
+                        android:text="Amount"
                         android:textSize="20dp"
                         android:textStyle="bold" />
 
@@ -289,6 +292,77 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dashed"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:text="\u20B90"
+                        android:textColor="#000000"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/minus"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/total_text"
+                        android:layout_marginRight="20dp"
+                        android:text="-"
+                        android:textColor="#000000"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/savings_text"
+                        android:textColor="#000000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/minus"
+                        android:layout_marginLeft="10dp"
+                        android:text="Earnings"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/num_savings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/minus"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:text="\u20B90"
+                        android:textColor="#000000"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <com.xfinity.dahdit.DashedLine
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/dashed2"
+                        app:dashColor="#000000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:dashHeight="3dp"
+                        app:dashLength="8dp"
+                        app:minimumDashGap="3dp"
+                        android:layout_below="@+id/num_savings"/>
+
+                    <TextView
+                        android:id="@+id/fin_text"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#000000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dashed2"
+                        android:layout_marginLeft="10dp"
+                        android:text="Total Amount"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/num_fin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dashed2"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="20dp"
                         android:text="\u20B90"
@@ -306,7 +380,12 @@
                         android:textAllCaps="false"
                         android:textColor="#fa638c"
                         android:layout_marginLeft="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/total_save"/>
                 </LinearLayout>
+
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>

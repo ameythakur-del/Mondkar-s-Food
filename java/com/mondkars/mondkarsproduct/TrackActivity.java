@@ -23,7 +23,7 @@ public class TrackActivity extends AppCompatActivity {
     ImageView img_orderconfirmed,orderprocessed,orderpickup;
     TextView textorderpickup,text_confirmed,textorderprocessed, n, m;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class TrackActivity extends AppCompatActivity {
 
             }
         });
-        final DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        final DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         data.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

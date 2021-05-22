@@ -53,19 +53,22 @@ public class GalleryFragment extends AppCompatActivity {
     public TextView dprice, dcharge, dtotal, status;
     DatabaseReference dileveryReference, minReference;
     CardView cardView1, cardView2;
-    TextView textView1, textView2, textView3;
+    TextView textView1, textView2, textView3, earning;
     ImageView imageView;
     ProgressBar progressBar;
     Button button;
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String currentUserId = user.getUid();
+    String currentUserPhone = user.getPhoneNumber();
     DatabaseReference limit = FirebaseDatabase.getInstance().getReference().child("Availed").child(currentUserId);
     DatabaseReference limitnot = FirebaseDatabase.getInstance().getReference().child("limit");
     DatabaseReference location = FirebaseDatabase.getInstance().getReference().child("Location");
+    int off = 0;
 
     String charge, min;
     int ch = 0;
     int Min = 0;
+    int g=0;
 
     TextView coupon, discount;
     public String a = "0", k;
@@ -76,6 +79,7 @@ public class GalleryFragment extends AppCompatActivity {
         setContentView(R.layout.fragment_gallery);
         myOrders = new ArrayList<MyOrder>();
 
+        earning = findViewById(R.id.earning_discount_price);
         button = findViewById(R.id.track);
         progressBar = findViewById(R.id.progressbar);
         textView1 = findViewById(R.id.empty);
@@ -86,14 +90,14 @@ public class GalleryFragment extends AppCompatActivity {
         cardView2 = findViewById(R.id.cardview2);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            new SweetAlertDialog(GalleryFragment.this)
+            new SweetAlertDialog(com.mondkars.mondkarsproduct.GalleryFragment.this)
                     .setTitleText("Your order is confirmed. We are arriving soon !")
                     .show();
         }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(GalleryFragment.this, TrackActivity.class);
+                Intent intent = new Intent(com.mondkars.mondkarsproduct.GalleryFragment.this, TrackActivity.class);
                 startActivityForResult(intent, TRACK_ACTIVITY_REQUEST_CODE);
             }
         });
@@ -133,17 +137,16 @@ public class GalleryFragment extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.order_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         dileveryReference = FirebaseDatabase.getInstance().getReference().child("charge").child("delivery");
         minReference = FirebaseDatabase.getInstance().getReference().child("charge").child("Min");
         if (user != null) {
             reference = FirebaseDatabase.getInstance().getReference().child("Order");
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserPhone);
             {
                 {
                     {
                         dcharge.setText("\u20B9" + "0");
-                        Query query = reference.orderByChild("userId").equalTo(user.getUid());
+                        Query query = reference.orderByChild("userId").equalTo(user.getPhoneNumber());
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -153,6 +156,7 @@ public class GalleryFragment extends AppCompatActivity {
                                         final MyOrder ameya = dataSnapshot1.getValue(MyOrder.class);
                                         int temp = Integer.parseInt(ameya.getPrice());
                                         int temp2 = Integer.parseInt(ameya.getNumber());
+                                        d = d + Integer.parseInt(ameya.getDiscount());
                                         cost = cost + temp * temp2;
                                         myOrders.add(ameya);
                                     }
@@ -170,30 +174,7 @@ public class GalleryFragment extends AppCompatActivity {
                                     button.setVisibility(View.VISIBLE);
                                     cardView1.setVisibility(View.VISIBLE);
                                     cardView2.setVisibility(View.VISIBLE);
-                                    int b = Integer.parseInt(a);
-                                    int c = (cost * b / 100);
-                                    d = Math.round(c);
-                                    limitnot.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.exists()) {
-                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                                    if (dataSnapshot1.exists()) {
-                                                        if (dataSnapshot1.getValue().toString().equals(currentUserId + k)) {
-                                                            d = 0;
-                                                        }
-                                                    }
 
-                                                }
-                                            }
-                                            discount.setText("\u20B9" + String.valueOf(d));
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
                                     minReference.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -213,63 +194,87 @@ public class GalleryFragment extends AppCompatActivity {
                                             charge = dataSnapshot.getValue().toString();
                                             ch = Integer.valueOf(charge);
 
-                                            if (cost >= Min) {
-                                                dprice.setText("\u20B9" + (cost));
-                                                dcharge.setText("Free");
-                                                dcharge.setTextColor(Color.parseColor("#008000"));
-                                                dtotal.setText("\u20B9" + (cost - d));
-                                                databaseReference.addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        if (dataSnapshot.child("Take Away").exists()) {
-                                                            dcharge.setText("Take Away");
-                                                            dtotal.setText("\u20B9" + (cost - d));
-                                                        }
+                                            DatabaseReference giftReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(currentUserPhone);
+
+                                            giftReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.exists()) {
+//                                stotal.setText("\u20B9" + snapshot.child("money").getValue().toString());
+//                                fintotal.setText("\u20B9" + (cost + ch - d - Integer.parseInt(snapshot.child("money").getValue().toString())));
+                                                        g = Integer.parseInt(snapshot.child("money").getValue().toString());
+
+                                                    } else {
+                                                        g = 0;
+                                                    }
+                                                    discount.setText("\u20B9" + (d + g));
+                                                    if (cost >= Min) {
+                                                        earning.setText("\u20B9" + g);
+                                                        dprice.setText("\u20B9" + (cost));
+                                                        dcharge.setText("Free");
+                                                        dcharge.setTextColor(Color.parseColor("#008000"));
+                                                        dtotal.setText("\u20B9" + (cost - d - g));
+                                                        databaseReference.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                if (dataSnapshot.child("Take Away").exists()) {
+                                                                    dcharge.setText("Take Away");
+                                                                    dtotal.setText("\u20B9" + (cost - d - g));
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+                                                    } else {
+                                                        earning.setText("\u20B9" + g);
+                                                        dprice.setText("\u20B9" + (cost));
+                                                        dcharge.setText("\u20B9" + charge);
+                                                        dtotal.setText("\u20B9" + (cost + ch - d - g));
+                                                        databaseReference.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                if (dataSnapshot.child("Take Away").exists()) {
+                                                                    dcharge.setText("Take Away");
+                                                                    dcharge.setTextColor(Color.parseColor("#008000"));
+                                                                    dtotal.setText("\u20B9" + (cost - d - g));
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
+
                                                     }
 
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    orderRecyclerAdapter = new OrderRecyclerAdapter(com.mondkars.mondkarsproduct.GalleryFragment.this, myOrders);
+                                                    recyclerView.setAdapter(orderRecyclerAdapter);
+                                                    orderRecyclerAdapter.notifyDataSetChanged();
+                                                }
 
-                                                    }
-                                                });
-                                            } else {
-                                                dprice.setText("\u20B9" + (cost));
-                                                dcharge.setText("\u20B9" + charge);
-                                                dtotal.setText("\u20B9" + (cost + ch - d));
-                                                databaseReference.addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        if (dataSnapshot.child("Take Away").exists()) {
-                                                            dcharge.setText("Take Away");
-                                                            dcharge.setTextColor(Color.parseColor("#008000"));
-                                                            dtotal.setText("\u20B9" + (cost - d));
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                            }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    Toast.makeText(com.mondkars.mondkarsproduct.GalleryFragment.this, "Network error", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                         }
 
                                         @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
                                         }
                                     });
-
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    orderRecyclerAdapter = new OrderRecyclerAdapter(GalleryFragment.this, myOrders);
-                                    recyclerView.setAdapter(orderRecyclerAdapter);
-                                    orderRecyclerAdapter.notifyDataSetChanged();
                                 }
                             }
 
                             @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(GalleryFragment.this, "Network error", Toast.LENGTH_SHORT).show();
+                            public void onCancelled(@NonNull DatabaseError error) {
+
                             }
                         });
                     }
@@ -277,7 +282,7 @@ public class GalleryFragment extends AppCompatActivity {
             }
         }
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            data = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            data = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserPhone);
             data.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -297,7 +302,7 @@ public class GalleryFragment extends AppCompatActivity {
                                             location.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(dataSnapshot.getValue().toString()));
+                                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.getValue().toString()));
                                                     startActivity(intent);
                                                 }
 
@@ -329,18 +334,18 @@ public class GalleryFragment extends AppCompatActivity {
 
                         if (dataSnapshot.child("status").getValue().toString().equals("We are Out for delivery. Coming soon !") || dataSnapshot.child("status").getValue().toString().equals("Your order is ready to pickup")){
                             createNotificationChannel();
-                            NotificationCompat.Builder builder = new NotificationCompat.Builder(GalleryFragment.this, CHANNEL_ID);
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(com.mondkars.mondkarsproduct.GalleryFragment.this, CHANNEL_ID);
                             builder.setSmallIcon(R.drawable.logo);
                             builder.setContentTitle("Thank you for ordering with us !");
                             builder.setContentText("Share your experience with our taste and service here");
                             builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-                            Intent intent = new Intent(GalleryFragment.this, ContactUs.class);
+                            Intent intent = new Intent(com.mondkars.mondkarsproduct.GalleryFragment.this, ContactUs.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            PendingIntent pendingIntent = PendingIntent.getActivity(GalleryFragment.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(com.mondkars.mondkarsproduct.GalleryFragment.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             builder.setContentIntent(pendingIntent);
 
-                            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(GalleryFragment.this);
+                            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(com.mondkars.mondkarsproduct.GalleryFragment.this);
                             notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
                         }
                     }

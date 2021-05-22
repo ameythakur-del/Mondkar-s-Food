@@ -6,13 +6,18 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,119 +34,119 @@ import ui.CouponRecyclerAdapter;
 
 public class CouponActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView, recyclerView2, recyclerView3;
-    CouponRecyclerAdapter couponRecyclerAdapter;
-    DatabaseReference reference, reference2;
-    public List<Coupon> couponList;
-    SearchView searchView;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-    ProgressBar progressBar;
-    TextView textView;
-    View v1, v2, v3, v4;
-    CardView cardi;
+
+    private Button button3;
+    private EditText editText;
+    private ProgressDialog progressDialog;
+    private FirebaseAuth firebaseAuth;
+    private String username;
+    TextView back;
+    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Takers");
+    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Donors");
+    String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
-        cardi = findViewById(R.id.cardi);
-        v1 = findViewById(R.id.vi1);
-        v2 = findViewById(R.id.vi2);
-        v3 = findViewById(R.id.vi3);
-        v4 = findViewById(R.id.vi4);
-        progressBar = findViewById(R.id.progress_bar);
-        couponList = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference().child("Special users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        reference2 = FirebaseDatabase.getInstance().getReference().child("Coupons");
-        searchView = findViewById(R.id.coupon_se);
+        editText = findViewById(R.id.referral_number);
+        button3 = findViewById(R.id.refferal_button3);
+        back = findViewById(R.id.referral_back);
 
-        textView = findViewById(R.id.no_coupons);
-        recyclerView3 = findViewById(R.id.cons_all);
-        recyclerView2 = findViewById(R.id.coupen_all);
-        recyclerView = findViewById(R.id.coupen_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView3.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView2.setHasFixedSize(true);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView3.setLayoutManager(new LinearLayoutManager(this));
-        progressBar.setVisibility(View.VISIBLE);
-        {
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    couponList = new ArrayList<Coupon>();
-                    {
-                        final Coupon coupon = dataSnapshot.getValue(Coupon.class);
-                        if (dataSnapshot.child("code").exists()) {
-                            couponList.add(coupon);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProgressDialog progressDialog = new ProgressDialog(CouponActivity.this);
+                progressDialog.setMessage("Verifying...");
+                progressDialog.show();
+                username = editText.getText().toString().trim();
+                if (TextUtils.isEmpty(username)) {
+                    progressDialog.dismiss();
+                    Toast.makeText(CouponActivity.this, "Please enter the mobile number", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (username.length() < 10){
+                    progressDialog.dismiss();
+                    Toast.makeText(CouponActivity.this, "Please enter the valid mobile number", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (username.length() > 10){
+                    progressDialog.dismiss();
+                    Toast.makeText(CouponActivity.this, "Please enter the mobile number without country code", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (("+91"+username).equals(phone)){
+                    progressDialog.dismiss();
+                    Toast.makeText(CouponActivity.this, "Referral number and the user number cannot be the same", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else{
+                    databaseReference1.child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                progressDialog.dismiss();
+                                Toast.makeText(CouponActivity.this, "Referral discount is available only for the first order", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(CouponActivity.this, MyCart.class);
+                                intent.putExtra("discount", 0);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else{
+                                databaseReference2.child("+91" + editText.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()){
+                                            progressDialog.dismiss();
+                                            Toast.makeText(CouponActivity.this, "Availed", Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent(CouponActivity.this, MyCart.class);
+                                            intent.putExtra("discount", 10);
+                                            intent.putExtra("gift", "+91" + username);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(CouponActivity.this, "User whith phone number +91" + editText.getText().toString() + " does not exist", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
                         }
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
-        }
-        reference2.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    final Coupon coupon = dataSnapshot1.getValue(Coupon.class);
-                    couponList.add(coupon);
-                }
-                {
-                    if (couponList.toString() == "[]") {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        textView.setVisibility(View.VISIBLE);
-                        searchView.setVisibility(View.INVISIBLE);
-                        v1.setVisibility(View.INVISIBLE);
-                        v2.setVisibility(View.INVISIBLE);
-                        v3.setVisibility(View.INVISIBLE);
-                        v4.setVisibility(View.INVISIBLE);
-                        cardi.setVisibility(View.INVISIBLE);
-                    } else {
-                        couponRecyclerAdapter = new CouponRecyclerAdapter(CouponActivity.this, couponList);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        recyclerView2.setAdapter(couponRecyclerAdapter);
-                        couponRecyclerAdapter.notifyDataSetChanged();
-                    }
-                }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        couponRecyclerAdapter.getFilter().filter(newText);
-                        recyclerView2.setAdapter(couponRecyclerAdapter);
-                        couponRecyclerAdapter.notifyDataSetChanged();
-                        return true;
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
 
             }
         });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CouponActivity.this, MyCart.class));
+                finish();
+            }
+        });
+
+
     }
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MyCart.class);
-        startActivityForResult(myIntent, 0);
-        finish();
-        return true;
-    }
+
     @Override
     public void onBackPressed() {
-        finish();
+        super.onBackPressed();
         startActivity(new Intent(CouponActivity.this, MyCart.class));
+        finish();
     }
 }

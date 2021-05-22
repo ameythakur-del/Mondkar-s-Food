@@ -42,18 +42,11 @@
                 android:value="com.mondkars.mondkarsproduct.CouponActivity" />
         </activity>
         <activity
-            android:name=".ForgetPassword"
-            android:theme="@style/ForgetPassword">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mondkars.mondkarsproduct.AboutUsFragment" />
-        </activity>
-        <activity
             android:name=".ChangeAddress"
             android:theme="@style/ChangeAddress">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mondkars.mondkarsproduct.ChangeAddress" />
+                android:value="com.mondkars.saatwik.ChangeAddress" />
         </activity>
         <activity
             android:name=".AboutUsFragment"
@@ -82,6 +75,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mondkars.mondkarsproduct.MyCart" />
+        </activity>
+        <activity android:name=".MyMoney"
+            android:theme="@style/ColorTheme10">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.MyMoney" />
         </activity>
         <activity
             android:name=".wishlist"
@@ -112,6 +111,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

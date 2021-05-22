@@ -115,7 +115,7 @@ public class CouponRecyclerAdapter extends RecyclerView.Adapter<CouponRecyclerAd
                 int position = getAdapterPosition();
                 Coupon coupon = couponList.get(position);
                 String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                reference = FirebaseDatabase.getInstance().getReference().child("Availed").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                reference = FirebaseDatabase.getInstance().getReference().child("Availed").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
                 reference.setValue(coupon);
                 ((Activity) context).finish();
                 context.startActivity(new Intent(context, MyCart.class));

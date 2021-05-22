@@ -1,148 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CouponActivity"
-    android:background="#F0F0ED">
+    tools:context=".Activity2"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#FFFFFF"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/no_coupons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No coupons are available for now !"
-        android:textSize="20dp"
-        android:textColor="#000000"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
+        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardview1"
+            <LinearLayout
+                android:padding="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:cardElevation="10dp">
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
-                    android:padding="20dp"
+                    android:layout_marginBottom="25dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="You cannot avail any of these coupons more than one time." />
+                    android:textFontWeight="20"
+                    android:text="Enter the mobile number of the user who have recommended you about the app"
+                    android:textColor="#000000"
+                    android:textSize="20dp"/>
 
-            </androidx.cardview.widget.CardView>
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <View
-                android:id="@+id/vi1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#c0c0c0"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                <View
-                    android:id="@+id/vi2"
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#c0c0c0"/>
-                <SearchView
-                    android:layout_gravity="center"
-                    android:id="@+id/coupon_se"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusedByDefault="true"
-                    android:iconifiedByDefault="false"
-                    android:queryHint="Search coupons">
-                </SearchView>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <RelativeLayout
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <View
-                            android:id="@+id/vi3"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="5dp"
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="#c0c0c0"/>
-                    </RelativeLayout>
+                        android:layout_height="wrap_content"
+                        app:boxStrokeColor="#0C73EB"
+                        app:boxStrokeWidth="2dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:hint="Referers Mobile No."
+                        app:hintTextColor="#0C73EB"
+                        app:prefixText="+91">
+
+                        <!--this is the actual edit text which takes the input-->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/referral_number"
+                            android:textColor="#000000"
+                            android:inputType="phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
-                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:textColor="#98AFC7"
+                    android:layout_marginTop="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You can avail the refferal discount only on your first order."/>
+
+
+                <TextView
+                    android:layout_marginTop="25dp"
+                    android:id="@+id/referral_back"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="Back"
+                    android:textColor="#0C73EB"/>
             </LinearLayout>
-            <View
-                android:layout_marginTop="-1dp"
-                android:id="@+id/vi4"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#c0c0c0"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/coupen_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/coupon_se" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/coupen_all"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/coupen_view" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cons_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/coupon_se" />
         </LinearLayout>
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-   </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/refferal_button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply Discount"
+            android:textAllCaps="false"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:background="@drawable/round_button"
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.mondkars.mondkarsproduct.Utils.Users;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,11 +37,11 @@ public class ConfirmActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Registering users");
-    TextView name, address, mobile1, mobile2;
+    TextView name, address, mobile1;
     Button button, confirm;
     String currentUserId;
     RadioButton checkBox1, checkBox2;
-    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
     Timer timer;
     final String CHANNEL_ID = "personal notifications";
     final int NOTIFICATION_ID = 001;
@@ -50,7 +51,7 @@ public class ConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        currentUserId = user.getUid();
+        currentUserId = user.getPhoneNumber();
 
         checkBox1 = findViewById(R.id.home_check);
         checkBox1.setChecked(true);
@@ -59,32 +60,28 @@ public class ConfirmActivity extends AppCompatActivity {
         name = findViewById(R.id.name_view);
         address = findViewById(R.id.address_view);
         mobile1 = findViewById(R.id.mobile1);
-        mobile2 = findViewById(R.id.mobile2);
         button = findViewById(R.id.confirm);
 
-        collectionReference
-                .whereEqualTo("UserId", currentUserId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if(e != null){
+        String currentUserPhone = user.getPhoneNumber();
 
+        collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                {
+
+                    if (value.exists()) {
+                        {
+                            Users users = Users.getInstance();
+                            String temp = value.getString("Address");
+                            address.setText(temp + ".");
+                            name.setText(value.getString("Name"));
+                            mobile1.setText(value.getId());
                         }
-                        assert  queryDocumentSnapshots != null;
-                        if(!queryDocumentSnapshots.isEmpty()){
-                            for(QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
-                                Users users = Users.getInstance();
-                                String temp = snapshot.getString("Address");
-                                address.setText(temp + ".");
-                                name.setText(snapshot.getString("Name"));
-                                mobile1.setText(snapshot.getString("Mobile"));
-                                mobile2.setText(snapshot.getString("Alternate mobile"));
-                            }
-                        }
-                        else
-                            Toast.makeText(ConfirmActivity.this, "Couldn't find your address !", Toast.LENGTH_LONG).show();
-                    }
-                });
+                    }else
+                        Toast.makeText(ConfirmActivity.this, "Couldn't find your address !", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
      confirm.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {

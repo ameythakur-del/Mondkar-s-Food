@@ -12,11 +12,12 @@ public class Item {
     private String category;
     private String original;
     private String available;
+    private Boolean visibility;
 
     public Item() {
     }
 
-    public Item(String item, String taste, String imageUrl, String price,String per, String delivery, String category, String original, String available) {
+    public Item(String item, String taste, String imageUrl, String price,String per, String delivery, String category, String original, String available, Boolean visibility) {
         this.item = item;
         this.taste = taste;
         this.imageUrl = imageUrl;
@@ -26,6 +27,7 @@ public class Item {
         this.category = category;
         this.original = original;
         this.available = available;
+        this.visibility = visibility;
     }
 
     public String getItem() {
@@ -98,5 +100,13 @@ public class Item {
 
     public void setAvailable(String available) {
         this.available = available;
+    }
+
+    public Boolean getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Boolean visibility) {
+        this.visibility = visibility;
     }
 }

@@ -45,7 +45,7 @@ public class wishlist extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         user = FirebaseAuth.getInstance().getCurrentUser();
-        String currentUserId = user.getUid();
+        String currentUserId = user.getPhoneNumber();
         {
             {
                 {

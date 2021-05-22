@@ -1,8 +1,11 @@
 package com.mondkars.mondkarsproduct;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -12,6 +15,11 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -20,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -117,6 +126,35 @@ public class Main2Activity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
 
+        if(user != null){
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        SpannableString s = new SpannableString("My Money: "+"\u20B9" + snapshot.child("money").getValue().toString());
+                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                        menu.getItem(0).setTitle(s);
+                    }
+                    else{
+                        SpannableString s = new SpannableString("Earn Money");
+                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                        menu.getItem(0).setTitle(s);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            SpannableString s = new SpannableString("Earn Money");
+            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+            menu.getItem(0).setTitle(s);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -143,11 +181,11 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
             break;
-            case R.id.wish_list:
+            case R.id.my_money_1:
             {
                 if (user != null) {
                     startActivity(new Intent(Main2Activity.this,
-                            wishlist.class));
+                            MyMoney.class));
                 } else {
                     finish();
                     Toast.makeText(Main2Activity.this, "You need to log in first !", Toast.LENGTH_LONG).show();

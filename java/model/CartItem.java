@@ -11,11 +11,13 @@ public class CartItem {
     private String number;
     private String userId;
     private String time;
+    private String original;
+    private String discount;
 
     public CartItem() {
     }
 
-    public CartItem(String item, String taste, String imageUrl, String price, String per, String delivery, String category, String number, String userId, String time) {
+    public CartItem(String item, String taste, String imageUrl, String price, String per, String delivery, String category, String number, String userId, String time, String original, String discount) {
         this.item = item;
         this.taste = taste;
         this.imageUrl = imageUrl;
@@ -26,6 +28,8 @@ public class CartItem {
         this.number = number;
         this.userId = userId;
         this.time = time;
+        this.original = original;
+        this.discount = discount;
     }
 
     public String getItem() {
@@ -106,5 +110,21 @@ public class CartItem {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 }

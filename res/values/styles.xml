@@ -34,6 +34,13 @@
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorAccent">#fa638c</item>
     </style>
+    <style name="ColorTheme10" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">#b83d0f </item>
+        <item name="title">My Earnings</item>
+        <item name="android:statusBarColor">#A52A2A</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="colorAccent">#fa638c</item>
+    </style>
 
     <style name="UpdateActivity" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">#b83d0f </item>
@@ -51,7 +58,7 @@
         <item name="colorAccent">#fa638c</item>
     </style>
 
-    <style name="CouponActivity" parent="Theme.AppCompat.Light">
+    <style name="CouponActivity" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">#b83d0f </item>
         <item name="android:editTextColor">#000000</item>
         <item name="title">Apply Coupons</item>
@@ -60,7 +67,7 @@
         <item name="colorAccent">#fa638c</item>
     </style>
 
-    <style name="ChangeAddress" parent="Theme.AppCompat.Light">
+    <style name="ChangeAddress" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">#b83d0f </item>
         <item name="title">Change Address</item>
         <item name="android:statusBarColor">#A52A2A</item>

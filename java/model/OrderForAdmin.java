@@ -1,16 +1,17 @@
 package model;
 
 public class OrderForAdmin {
-    String item, number, price, userId;
+    String item, number, price, userId, discount;
 
     public OrderForAdmin() {
     }
 
-    public OrderForAdmin(String item, String number, String price, String userId) {
+    public OrderForAdmin(String item, String number, String price, String userId, String discount) {
         this.item = item;
         this.number = number;
         this.price = price;
         this.userId = userId;
+        this.discount = discount;
     }
 
     public String getItem() {
@@ -43,5 +44,13 @@ public class OrderForAdmin {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 }

@@ -127,7 +127,7 @@ public class WishRecyclerAdapter extends RecyclerView.Adapter<WishRecyclerAdapte
                 int position = getAdapterPosition();
                 Wish wish = wishList.get(position);
 //
-                reference = FirebaseDatabase.getInstance().getReference().child("wish").child(wish.getUserId() + wish.getItem());
+                reference = FirebaseDatabase.getInstance().getReference().child("wish").child(user.getPhoneNumber() + wish.getItem());
                 reference.removeValue();
             }
 
@@ -155,10 +155,10 @@ public class WishRecyclerAdapter extends RecyclerView.Adapter<WishRecyclerAdapte
                             cartItem.setCategory(category);
                             cartItem.setDelivery(deliviery);
                             cartItem.setNumber(Number);
-                            cartItem.setUserId(user.getUid().toString());
+                            cartItem.setUserId(user.getPhoneNumber().toString());
                             String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                             cartItem.setTime(currentDateTimeString);
-                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(wish.getUserId() + wish.getItem());
+                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber() + wish.getItem());
                             databaseReference.setValue(cartItem);
                             context.startActivity(new Intent(context, MyCart.class));
                         }

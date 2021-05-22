@@ -119,13 +119,13 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             List<Item> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(itemListFull);
+                filteredList.addAll(itemList);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (Item item : itemListFull) {
                     if (item.getItem() != null) {
-                        if (item.getItem().toLowerCase().contains(filterPattern)) {
+                        if (item.getItem().toLowerCase().contains(filterPattern) && item.getVisibility()) {
                             filteredList.add(item);
                         }
                     }
@@ -231,10 +231,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                         cartItem.setCategory(category);
                                         cartItem.setDelivery(deliviery);
                                         cartItem.setNumber(number);
-                                        cartItem.setUserId(user.getUid().toString());
+                                        cartItem.setUserId(user.getPhoneNumber().toString());
                                         String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                                         cartItem.setTime(currentDateTimeString);
-                                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                         databaseReference.setValue(cartItem);
                                         Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -261,10 +261,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                         cartItem.setCategory(category);
                                         cartItem.setDelivery(deliviery);
                                         cartItem.setNumber(number);
-                                        cartItem.setUserId(user.getUid().toString());
+                                        cartItem.setUserId(user.getPhoneNumber().toString());
                                         String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                                         cartItem.setTime(currentDateTimeString);
-                                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                        databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                         databaseReference.setValue(cartItem);
                                         Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -318,10 +318,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                             cartItem.setCategory(category);
                                             cartItem.setDelivery(deliviery);
                                             cartItem.setNumber(number);
-                                            cartItem.setUserId(user.getUid().toString());
+                                            cartItem.setUserId(user.getPhoneNumber().toString());
                                             String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                                             cartItem.setTime(currentDateTimeString);
-                                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                             databaseReference.setValue(cartItem);
                                             context.startActivity(new Intent(context, MyCart.class));
                                         }
@@ -349,10 +349,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                             cartItem.setCategory(category);
                                             cartItem.setDelivery(deliviery);
                                             cartItem.setNumber(number);
-                                            cartItem.setUserId(user.getUid().toString());
+                                            cartItem.setUserId(user.getPhoneNumber().toString());
                                             String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                                             cartItem.setTime(currentDateTimeString);
-                                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getUid().toString() + cartItem.getItem());
+                                            databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                             databaseReference.setValue(cartItem);
                                             context.startActivity(new Intent(context, MyCart.class));
                                         }

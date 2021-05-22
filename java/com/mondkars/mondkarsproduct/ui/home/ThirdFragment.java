@@ -189,7 +189,7 @@ public class ThirdFragment extends Fragment {
                                 {
                                     Item ameya = dataSnapshot1.getValue(Item.class);
                                     if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha")) {
+                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
                                             itemList.add(ameya);
                                         }
                                     }
@@ -221,7 +221,7 @@ public class ThirdFragment extends Fragment {
                                     Item ameya = dataSnapshot1.getValue(Item.class);
 
                                     if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha")) {
+                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
                                             itemList.add(ameya);
                                         }
                                     }
@@ -252,7 +252,7 @@ public class ThirdFragment extends Fragment {
                                 {
                                     Item ameya = dataSnapshot1.getValue(Item.class);
 
-                                    if (dataSnapshot1.child("category").exists()) {
+                                    if (dataSnapshot1.child("category").exists() && ameya.getVisibility()) {
                                         if (ameya.getCategory().equals("Masalyache Padartha")) {
                                             itemList.add(ameya);
                                         }
@@ -284,7 +284,7 @@ public class ThirdFragment extends Fragment {
                                 {
                                     Item ameya = dataSnapshot1.getValue(Item.class);
                                     if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha")) {
+                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
                                             itemList.add(ameya);
                                         }
                                     }
@@ -315,7 +315,7 @@ public class ThirdFragment extends Fragment {
                                 {
                                     Item ameya = dataSnapshot1.getValue(Item.class);
                                     if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha")) {
+                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
                                             itemList.add(ameya);
                                         }
                                     }
