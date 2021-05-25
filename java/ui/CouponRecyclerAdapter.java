@@ -8,10 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.mondkars.mondkarsproduct.CouponActivity;
 import com.mondkars.mondkarsproduct.MyCart;
 import com.mondkars.mondkarsproduct.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,7 +55,8 @@ public class CouponRecyclerAdapter extends RecyclerView.Adapter<CouponRecyclerAd
         if(coupon != null)
         {
             viewHolder.code.setText(coupon.getCode());
-            viewHolder.percent.setText("GET " + coupon.getPercent()+ "% OFF");
+            viewHolder.percent.setText(coupon.getPercent()+ "% OFF");
+            viewHolder.condition.setText(coupon.getCondition());
         }
     }
     @Override
@@ -58,51 +64,18 @@ public class CouponRecyclerAdapter extends RecyclerView.Adapter<CouponRecyclerAd
         return couponList.size();
     }
 
-    public Filter getFilter() {
-        return itemFilter;
-    }
-
-    private Filter itemFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<Coupon> filteredList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(couponListFull);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (Coupon coupon : couponListFull) {
-                    if (coupon.getCode().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(coupon);
-                    }
-                }
-            }
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            couponList.clear();
-            couponList.addAll((List) results.values);
-            notifyDataSetChanged();
-        }
-    };
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView
                code,
                 percent,
-                apply;
+                apply, condition;
 
-        DatabaseReference reference;
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Availed");
         public ViewHolder(@NonNull View itemView, Context ctx) {
             super(itemView);
             context = ctx;
 
+            condition = itemView.findViewById(R.id.condition);
             code = itemView.findViewById(R.id.text_coupon);
             percent = itemView.findViewById(R.id.text_percent);
             apply = itemView.findViewById(R.id.apply10);
@@ -114,11 +87,31 @@ public class CouponRecyclerAdapter extends RecyclerView.Adapter<CouponRecyclerAd
             if(v == apply){
                 int position = getAdapterPosition();
                 Coupon coupon = couponList.get(position);
-                String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                reference = FirebaseDatabase.getInstance().getReference().child("Availed").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-                reference.setValue(coupon);
-                ((Activity) context).finish();
-                context.startActivity(new Intent(context, MyCart.class));
+
+                reference.child(coupon.getCode()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            Toast.makeText(context, "You have already availed this coupon once.", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            reference.child(coupon.getCode()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(coupon);
+                            reference.child(coupon.getCode()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("Validity").setValue(true);
+
+                            Toast.makeText(context, "Availed", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(context, MyCart.class);
+                            intent.putExtra("discount", Integer.parseInt(coupon.getPercent()));
+                            intent.putExtra("coupon", coupon.getCode());
+                            context.startActivity(intent);
+                            ((Activity) context).finish();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         }
     }

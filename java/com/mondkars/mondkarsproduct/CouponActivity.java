@@ -43,16 +43,43 @@ public class CouponActivity extends AppCompatActivity {
     TextView back;
     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Takers");
     DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Donors");
+    DatabaseReference couponReference = FirebaseDatabase.getInstance().getReference().child("Coupons");
     String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+    ArrayList<Coupon> coupons;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
+        recyclerView = findViewById(R.id.coupon_view);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         editText = findViewById(R.id.referral_number);
         button3 = findViewById(R.id.refferal_button3);
         back = findViewById(R.id.referral_back);
+
+        coupons = new ArrayList<>();
+
+        couponReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Coupon coupon = dataSnapshot.getValue(Coupon.class);
+                    coupons.add(coupon);
+                }
+                CouponRecyclerAdapter couponRecyclerAdapter = new CouponRecyclerAdapter(CouponActivity.this, coupons);
+                recyclerView.setAdapter(couponRecyclerAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         button3.setOnClickListener(new View.OnClickListener() {
             @Override

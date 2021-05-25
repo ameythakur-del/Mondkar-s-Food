@@ -132,7 +132,7 @@ public class Main2Activity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
-                        SpannableString s = new SpannableString("My Money: "+"\u20B9" + snapshot.child("money").getValue().toString());
+                        SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
                         s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
                         menu.getItem(0).setTitle(s);
                     }

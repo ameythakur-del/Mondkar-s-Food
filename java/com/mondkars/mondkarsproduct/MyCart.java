@@ -211,6 +211,9 @@ public class MyCart extends AppCompatActivity {
                                                     charge = dataSnapshot.getValue().toString();
                                                     ch = Integer.valueOf(charge);
 
+                                                    int a = 0;
+                                                    a = getIntent().getIntExtra("discount", 0);
+
                                                     giftReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -437,7 +440,7 @@ public class MyCart extends AppCompatActivity {
             }
         }
         Query query = reference.orderByChild("userId").equalTo(currentUserPhone);
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
