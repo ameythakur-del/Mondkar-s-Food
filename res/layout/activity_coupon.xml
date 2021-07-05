@@ -48,7 +48,7 @@
                         app:boxStrokeColor="#0C73EB"
                         app:boxStrokeWidth="2dp"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:hint="Referers Mobile No."
+                        android:hint="Referrer's Mobile No."
                         app:hintTextColor="#0C73EB"
                         app:prefixText="+91">
 
@@ -92,20 +92,19 @@
         android:nestedScrollingEnabled="false" />
     <LinearLayout
         android:gravity="bottom"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <Button
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/refferal_button3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
             android:text="Apply Discount"
-            android:textAllCaps="false"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:background="@drawable/round_button"
-            android:layout_marginTop="16dp"
-            android:textStyle="bold"
-            />
+            app:cornerRadius="5dp"
+            android:backgroundTint="#ED5A6B"/>
     </LinearLayout>
 </LinearLayout>

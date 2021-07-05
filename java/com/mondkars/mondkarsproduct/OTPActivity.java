@@ -135,6 +135,7 @@ public class OTPActivity extends AppCompatActivity {
             capture.setVisibility(View.INVISIBLE);
             resend.setVisibility(View.VISIBLE);
             countDownTimer.cancel();
+            Toast.makeText(com.mondkars.mondkarsproduct.OTPActivity.this, e.toString(), Toast.LENGTH_LONG).show();
             timer.setVisibility(View.INVISIBLE);
             if (e instanceof FirebaseAuthInvalidCredentialsException) {
                Toast.makeText(com.mondkars.mondkarsproduct.OTPActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();

@@ -186,7 +186,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="9420208656"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="#ED5A6B"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView2"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -238,7 +238,7 @@
                     android:layout_marginLeft="5dp"
                     android:clickable="true"
                     android:text="www.upscale.com"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="#ED5A6B" />
             </LinearLayout>
 
             <TextView

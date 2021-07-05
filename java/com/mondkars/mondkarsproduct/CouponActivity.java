@@ -85,7 +85,7 @@ public class CouponActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ProgressDialog progressDialog = new ProgressDialog(CouponActivity.this);
-                progressDialog.setMessage("Verifying...");
+                progressDialog.setMessage("Availing the discount...");
                 progressDialog.show();
                 username = editText.getText().toString().trim();
                 if (TextUtils.isEmpty(username)) {
@@ -117,10 +117,6 @@ public class CouponActivity extends AppCompatActivity {
                             if(snapshot.exists()){
                                 progressDialog.dismiss();
                                 Toast.makeText(CouponActivity.this, "Referral discount is available only for the first order", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(CouponActivity.this, MyCart.class);
-                                intent.putExtra("discount", 0);
-                                startActivity(intent);
-                                finish();
                             }
                             else{
                                 databaseReference2.child("+91" + editText.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {

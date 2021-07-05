@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.mondkars.mondkarsproduct">
+    package="com.mondkars.mondkarsproduct"
+    android:versionCode="12"
+    android:versionName="4.0">
 
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,9 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        <activity android:name=".PaymentActivity"
+            android:theme="@style/paymentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.PaymentActivity" />
+        </activity>
         <activity
             android:name=".Update"
-            android:theme="@style/UpdateActivity"></activity>
+            android:theme="@style/UpdateActivity" />
         <activity
             android:name=".TrackActivity"
             android:theme="@style/TrackActivity">
@@ -46,7 +54,7 @@
             android:theme="@style/ChangeAddress">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mondkars.saatwik.ChangeAddress" />
+                android:value="com.mondkars.mondkarsproduct.ChangeAddress" />
         </activity>
         <activity
             android:name=".AboutUsFragment"
@@ -76,7 +84,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mondkars.mondkarsproduct.MyCart" />
         </activity>
-        <activity android:name=".MyMoney"
+        <activity
+            android:name=".MyMoney"
             android:theme="@style/ColorTheme10">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

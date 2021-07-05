@@ -70,10 +70,11 @@ public class MyCart extends AppCompatActivity {
     int fin = 0;
     public String a = "0", k;
     TextView empty;
+    int payment=0;
     DatabaseReference dileveryReference, adminOrder;
     CardView card1, card2, card3;
     DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Stop");
-    DatabaseReference donor = FirebaseDatabase.getInstance().getReference().child("Donors");
+
     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Takers");
     DatabaseReference marketers = FirebaseDatabase.getInstance().getReference().child("Marketers");
     String marketer = null;
@@ -223,21 +224,40 @@ public class MyCart extends AppCompatActivity {
                                                             }
                                                             if (cost >= Min) {
                                                                 int h = (d+fin);
-                                                                totalSave.setText("You have saved " + "\u20B9" + (h) + " on this order.");
+                                                                if(h > 0) {
+                                                                    totalSave.setEnabled(true);
+                                                                    if(h > cost - d){
+                                                                        h = cost - d;
+                                                                    }
+                                                                    totalSave.setText("You have saved " + "\u20B9" + (h) + " on this order.");
+                                                                }
                                                                 original.setText("\u20B9" + cost);
-                                                                total.setText("\u20B9" + (cost - d));
                                                                 dcharge.setText("Free");
                                                                 dcharge.setTextColor(Color.parseColor("#008000"));
                                                                 dtotal.setText("\u20B9" + (cost - d));
+                                                                if(fin > cost - d){
+                                                                    fin = cost - d;
+                                                                }
+                                                                total.setText("\u20B9" + (cost - d - fin));
                                                                 fintotal.setText("\u20B9" + (cost - d - fin));
                                                             } else {
                                                                 int h = (d+fin);
-                                                                totalSave.setText("You have saved " + "\u20B9" + (h) + " on this order.");
+                                                                if(h > 0) {
+                                                                    totalSave.setEnabled(true);
+                                                                    if(h > cost + ch - d){
+                                                                        h = cost + ch - d;
+                                                                    }
+                                                                    totalSave.setText("You have saved " + "\u20B9" + (h) + " on this order.");
+                                                                }
                                                                 original.setText("\u20B9" + cost);
-                                                                total.setText("\u20B9" + (cost + ch - d));
                                                                 dcharge.setText("\u20B9" + charge);
                                                                 dtotal.setText("\u20B9" + (cost + ch - d));
-                                                                fintotal.setText("\u20B9" + (cost - d - fin));
+                                                                if(fin > cost - d){
+                                                                    fin = cost - d + ch;
+                                                                }
+                                                                total.setText("\u20B9" + (cost + ch - d - fin));
+                                                                fintotal.setText("\u20B9" + (cost - d - fin + ch));
+                                                                payment = cost - d - fin + ch;
                                                             }
                                                         }
 
@@ -276,6 +296,10 @@ public class MyCart extends AppCompatActivity {
                         public void onClick(View v) {
                             if (v == buy) {
                                 Intent intent = new Intent(com.mondkars.mondkarsproduct.MyCart.this, ConfirmActivity.class);
+                                if(getIntent().hasExtra("coupon")){
+                                    intent.putExtra("coupon", getIntent().getStringExtra("coupon"));
+                                    intent.putExtra("payment", payment);
+                                }
                                 startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE);
                             }
                         }
@@ -302,43 +326,9 @@ public class MyCart extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check that it is the SecondActivity with an OK result
-        if (requestCode == SECOND_ACTIVITY_REQUEST_CODE) {
-            donor.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.child(user.getPhoneNumber()).exists()) {
-                        return;
-                    } else {
-                        donor.child(user.getPhoneNumber()).setValue(user.getPhoneNumber());
-                    }
-                }
+        // Check that it is thedonor SecondActivity with an OK result
+       {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-            if (marketer != null) {
-                {
-                    marketers.child(marketer).child("money").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                int temp = Integer.parseInt(snapshot.getValue().toString());
-                                d += temp;
-                                snapshot.getRef().setValue(d);
-                            } else {
-                                snapshot.getRef().setValue(d);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            }
             if (resultCode == RESULT_OK) {
 
                 for (CartItem cartItem : myCart) {
@@ -350,7 +340,6 @@ public class MyCart extends AppCompatActivity {
                     cartItem.setDiscount(String.valueOf(c));
                     orderReference.setValue(cartItem);
 
-
                     OrderForAdmin orderForAdmin = new OrderForAdmin();
                     orderForAdmin.setItem(cartItem.getItem());
                     orderForAdmin.setNumber(cartItem.getNumber());
@@ -360,10 +349,6 @@ public class MyCart extends AppCompatActivity {
                     final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                     adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
                     adminOrder.setValue(orderForAdmin);
-
-                    if (!orderForAdmin.getDiscount().equals("0")) {
-                        databaseReference1.child(user.getPhoneNumber()).setValue(user.getPhoneNumber());
-                    }
 
                     final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
                     final CollectionReference collectionReference = db.collection("Registering users");
@@ -380,6 +365,7 @@ public class MyCart extends AppCompatActivity {
                                         userObj.put("Name", value.getString("Name"));
                                         userObj.put("Pincode", value.getString("Pincode"));
                                         userObj.put("Address", value.getString("Address"));
+                                        userObj.put("ReferralNumber", marketer);
                                         ref.setValue(userObj);
                                     }
                                 }
@@ -387,77 +373,100 @@ public class MyCart extends AppCompatActivity {
                         }
                     });
                 }
-            }
-        }
-        if (resultCode == RESULT_FIRST_USER) {
-
-            for (CartItem cartItem : myCart) {
-                int b = getIntent().getIntExtra("discount", 0);
-                int c = (Integer.parseInt(cartItem.getPrice()) * b * Integer.parseInt(cartItem.getNumber()) / 100);
-
-                String currentDateTimeString1 = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                orderReference = FirebaseDatabase.getInstance().getReference().child("Order").child(currentUserPhone + cartItem.getItem() + cartItem.getNumber() + currentDateTimeString1);
-                cartItem.setDiscount(String.valueOf(c));
-                orderReference.setValue(cartItem);
-
-                OrderForAdmin orderForAdmin = new OrderForAdmin();
-                orderForAdmin.setItem(cartItem.getItem());
-                orderForAdmin.setNumber(cartItem.getNumber());
-                orderForAdmin.setPrice(cartItem.getPrice());
-                orderForAdmin.setUserId(currentUserPhone);
-                orderForAdmin.setDiscount(String.valueOf(c));
-
-                final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
-                adminOrder.setValue(orderForAdmin);
-
-                if (!orderForAdmin.getDiscount().equals("0")) {
-                    databaseReference1.child(user.getPhoneNumber()).setValue(user.getPhoneNumber());
-                }
-
-                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
-                final CollectionReference collectionReference = db.collection("Registering users");
-
-                collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                Query query = reference.orderByChild("userId").equalTo(currentUserPhone);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        {
-
-                            if (value.exists()) {
-                                {
-
-                                    Map<String, String> userObj = new HashMap<>();
-                                    userObj.put("Mobile", value.getId());
-                                    userObj.put("Name", value.getString("Name"));
-                                    userObj.put("Pincode", value.getString("Pincode"));
-                                    userObj.put("Address", value.getString("Address"));
-                                    ref.setValue(userObj);
-                                }
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            {
+                                dataSnapshot1.getRef().removeValue();
                             }
                         }
                     }
-                });
-            }
-        }
-        Query query = reference.orderByChild("userId").equalTo(currentUserPhone);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    {
-                        dataSnapshot1.getRef().removeValue();
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
+                });
+
+
+                Intent fintent = new Intent(getBaseContext(), com.mondkars.mondkarsproduct.GalleryFragment.class);
+                fintent.putExtra("PREVIOUS_ACTIVITY", this.getClass().getSimpleName());
+                startActivity(fintent);
+                finish();
+            }
+
+            if (resultCode == RESULT_FIRST_USER) {
+
+                for (CartItem cartItem : myCart) {
+                    int b = getIntent().getIntExtra("discount", 0);
+                    int c = (Integer.parseInt(cartItem.getPrice()) * b * Integer.parseInt(cartItem.getNumber()) / 100);
+
+                    String currentDateTimeString1 = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                    orderReference = FirebaseDatabase.getInstance().getReference().child("Order").child(currentUserPhone + cartItem.getItem() + cartItem.getNumber() + currentDateTimeString1);
+                    cartItem.setDiscount(String.valueOf(c));
+                    orderReference.setValue(cartItem);
+
+                    OrderForAdmin orderForAdmin = new OrderForAdmin();
+                    orderForAdmin.setItem(cartItem.getItem());
+                    orderForAdmin.setNumber(cartItem.getNumber());
+                    orderForAdmin.setPrice(cartItem.getPrice());
+                    orderForAdmin.setUserId(currentUserPhone);
+                    orderForAdmin.setDiscount(String.valueOf(c));
+
+                    final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                    adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
+                    adminOrder.setValue(orderForAdmin);
+
+                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
+                    final CollectionReference collectionReference = db.collection("Registering users");
+
+                    collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            {
+
+                                if (value.exists()) {
+                                    {
+
+                                        Map<String, String> userObj = new HashMap<>();
+                                        userObj.put("Mobile", value.getId());
+                                        userObj.put("Name", value.getString("Name"));
+                                        userObj.put("Pincode", value.getString("Pincode"));
+                                        userObj.put("Address", value.getString("Address"));
+                                        userObj.put("ReferralNumber", marketer);
+                                        ref.setValue(userObj);
+                                    }
+                                }
+                            }
+                        }
+                    });
                 }
+                Query query = reference.orderByChild("userId").equalTo(currentUserPhone);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            {
+                                dataSnapshot1.getRef().removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+                Intent fintent = new Intent(getBaseContext(), com.mondkars.mondkarsproduct.GalleryFragment.class);
+                fintent.putExtra("PREVIOUS_ACTIVITY", this.getClass().getSimpleName());
+                startActivity(fintent);
+                finish();
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        Intent fintent = new Intent(getBaseContext(), com.mondkars.mondkarsproduct.GalleryFragment.class);
-        fintent.putExtra("PREVIOUS_ACTIVITY", this.getClass().getSimpleName());
-        startActivity(fintent);
-        finish();
+        }
     }
 }

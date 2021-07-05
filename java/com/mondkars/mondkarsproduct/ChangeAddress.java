@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +21,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -60,6 +64,13 @@ public class ChangeAddress extends AppCompatActivity implements View.OnClickList
         currentUserPhone = currentUser.getPhoneNumber();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                name.setText(value.get("Name").toString());
+                pincode.setText(value.get("Pincode").toString());
+            }
+        });
     }
 
     private void verifySignInCode() {
@@ -91,14 +102,18 @@ public class ChangeAddress extends AppCompatActivity implements View.OnClickList
             final String Pincode = pincode.getText().toString().trim();
             final String Address = address1.getText().toString().trim() + ", " + address2.getText().toString().trim() + ", " + address3.getText().toString().trim() + ", " + address4.getText().toString().trim();
             if (TextUtils.isEmpty(Name) && TextUtils.isEmpty(Pincode) && TextUtils.isEmpty(Address)) {
+                progressDialog.dismiss();
                 Toast.makeText(ChangeAddress.this, "Please fill all the details", Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(Name)) {
+                progressDialog.dismiss();
                 Toast.makeText(ChangeAddress.this, "Please enter your name", Toast.LENGTH_SHORT).show();
                 return;
             } else if (TextUtils.isEmpty(Pincode)) {
+                progressDialog.dismiss();
                 Toast.makeText(ChangeAddress.this, "Please enter your pincode", Toast.LENGTH_SHORT).show();
                 return;
             } else if (address1.getText().toString().isEmpty() || address2.getText().toString().isEmpty() || address3.getText().toString().isEmpty()) {
+                progressDialog.dismiss();
                 Toast.makeText(ChangeAddress.this, "Please complete the address", Toast.LENGTH_LONG).show();
             } else {
                 sendVerificationCode();

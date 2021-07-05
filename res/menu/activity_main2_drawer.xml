@@ -15,6 +15,11 @@
             android:title="My Orders" />
 
         <item
+            android:id="@+id/wish_list"
+            android:icon="@drawable/ic_baseline_watch_later_24"
+            android:title="Favourites" />
+
+        <item
             android:id="@+id/about_us"
             android:icon="@drawable/ic_business_black_24dp"
             android:title="About us" />

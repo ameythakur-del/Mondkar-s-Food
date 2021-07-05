@@ -55,7 +55,7 @@ public class Main2Activity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_about_us, R.id.contact_us)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_about_us, R.id.contact_us, R.id.wishlist)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -84,7 +84,7 @@ public class Main2Activity extends AppCompatActivity {
                     collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            {
+                            if (value.exists()){
                                 navUsername.setText(value.getString("Name"));
                             }
                         }
@@ -137,7 +137,7 @@ public class Main2Activity extends AppCompatActivity {
                         menu.getItem(0).setTitle(s);
                     }
                     else{
-                        SpannableString s = new SpannableString("Earn Money");
+                        SpannableString s = new SpannableString("Earnings");
                         s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
                         menu.getItem(0).setTitle(s);
                     }
@@ -150,7 +150,7 @@ public class Main2Activity extends AppCompatActivity {
             });
         }
         else{
-            SpannableString s = new SpannableString("Earn Money");
+            SpannableString s = new SpannableString("Earnings");
             s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
             menu.getItem(0).setTitle(s);
         }
@@ -228,6 +228,16 @@ public class Main2Activity extends AppCompatActivity {
                 return false;
             }
         });
+
+        navigationView.getMenu().findItem(R.id.wish_list).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(Main2Activity.this, wishlist.class));
+                drawer.closeDrawers();
+                return false;
+            }
+        });
+
 
         navigationView.getMenu().findItem(R.id.my_orders).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

@@ -95,9 +95,6 @@ public class CouponRecyclerAdapter extends RecyclerView.Adapter<CouponRecyclerAd
                             Toast.makeText(context, "You have already availed this coupon once.", Toast.LENGTH_LONG).show();
                         }
                         else{
-                            reference.child(coupon.getCode()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(coupon);
-                            reference.child(coupon.getCode()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("Validity").setValue(true);
-
                             Toast.makeText(context, "Availed", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(context, MyCart.class);
                             intent.putExtra("discount", Integer.parseInt(coupon.getPercent()));

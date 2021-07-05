@@ -212,7 +212,7 @@ public class FirstFragment extends Fragment {
             final LinearLayoutManager layoutManager
                     = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-            data.addValueEventListener(new ValueEventListener() {
+            data.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getValue().toString().equals("True")){
@@ -300,6 +300,7 @@ public class FirstFragment extends Fragment {
                                     {
                                         Item ameya = dataSnapshot1.getValue(Item.class);
                                         if(dataSnapshot1.child("category").exists())  {
+                                            assert ameya != null;
                                             if (ameya.getCategory().equals("Snacks") && ameya.getVisibility()) {
                                                 itemList.add(ameya);
                                             }

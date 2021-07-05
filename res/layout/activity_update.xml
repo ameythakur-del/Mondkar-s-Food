@@ -11,8 +11,9 @@
         android:id="@+id/noimage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/logo"
         android:layout_marginTop="50dp"
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toTopOf="@+id/notext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,16 +42,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.575"/>
 
-    <Button
-        android:padding="20dp"
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#6ca414"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="#ED5A6B"
+        android:drawableLeft="@drawable/ic_menu_share"
+        android:padding="20dp"
+        android:layout_marginTop="50dp"
         android:text="Click here to update"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notext" />
+        app:layout_constraintTop_toBottomOf="@+id/nowarning" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

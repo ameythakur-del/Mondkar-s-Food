@@ -118,7 +118,7 @@
             app:tabGravity="fill"
             app:tabMode="fixed"
             app:tabIndicatorHeight="3dp"
-            app:tabSelectedTextColor="#fa638c">
+            app:tabSelectedTextColor="#ED5A6B">
 
         </com.google.android.material.tabs.TabLayout>
 

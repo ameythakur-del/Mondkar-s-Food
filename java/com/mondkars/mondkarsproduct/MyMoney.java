@@ -77,7 +77,7 @@ public class MyMoney extends AppCompatActivity {
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 final String appPackageName = getPackageName();
-                String shareBody = "https://play.google.com/store/apps/details?id="+appPackageName + "\n\nDownload Mondkars Food now to taste delicious homemade food in this lockdown! Use my phone number as the referral code and earn 10% OFF on your first order.\n\nClick on the above link and Download now!";
+                String shareBody = "https://play.google.com/store/apps/details?id="+appPackageName + "\n\nDownload Mondkars Food now to taste delicious homemade food! Use my phone number as the referral code and earn 10% OFF on your first order.\n\nClick on the above link and Download now!";
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));

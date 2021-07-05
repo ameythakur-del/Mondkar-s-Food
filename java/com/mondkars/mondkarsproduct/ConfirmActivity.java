@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -43,8 +44,8 @@ public class ConfirmActivity extends AppCompatActivity {
     RadioButton checkBox1, checkBox2;
     final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
     Timer timer;
-    final String CHANNEL_ID = "personal notifications";
-    final int NOTIFICATION_ID = 001;
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Availed");
+    private static final int SECOND_ACTIVITY_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,34 +86,20 @@ public class ConfirmActivity extends AppCompatActivity {
      confirm.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-             createNotificationChannel();
-             NotificationCompat.Builder builder = new NotificationCompat.Builder(ConfirmActivity.this, CHANNEL_ID);
-             builder.setSmallIcon(R.drawable.logo);
-             builder.setContentTitle("Thank you for ordering with us !");
-             builder.setContentText("Be ready with your plates, We are coming soon !");
-             builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-             Intent fintent = new Intent(ConfirmActivity.this, ContactUs.class);
-             fintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-             PendingIntent pendingIntent = PendingIntent.getActivity(ConfirmActivity.this, 0, fintent, PendingIntent.FLAG_UPDATE_CURRENT);
-             builder.setContentIntent(pendingIntent);
-
-             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(ConfirmActivity.this);
-             notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
-             if (checkBox2.isChecked()){
-                 Intent intent = new Intent();
-                 intent.putExtra("Take", "True");
-                 setResult(RESULT_OK, intent);
-                 finish();
+             if(getIntent().hasExtra("coupon")) {
+                 reference.child(getIntent().getStringExtra("coupon")).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(getIntent().getStringExtra("coupon"));
              }
+
              if (!checkBox2.isChecked() && !checkBox1.isChecked()){
                  Toast.makeText(ConfirmActivity.this, "Kindly select any of the above options", Toast.LENGTH_LONG).show();
              }
-             if (checkBox1.isChecked()){
-                 Intent intent = new Intent();
-                 setResult(RESULT_FIRST_USER, intent);
-                 finish();
+             else {
+                 Intent intent = new Intent(ConfirmActivity.this, PaymentActivity.class);
+                 intent.putExtra("payment", getIntent().getIntExtra("payment", 0));
+                 startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE);
              }
+
          }
      });
     button.setOnClickListener(new View.OnClickListener() {
@@ -132,27 +119,48 @@ public class ConfirmActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
-        startActivity(new Intent(ConfirmActivity.this, MyCart.class));
     }
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MyCart.class);
-        startActivityForResult(myIntent, 0);
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
         return true;
     }
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            CharSequence name = "Personal Notifications";
-            String description = "Include all personal notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            notificationChannel.setDescription(description);
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
+        if(resultCode == RESULT_OK){
+            Toast.makeText(ConfirmActivity.this, "Payment Successfull", Toast.LENGTH_SHORT).show();
+            if (checkBox2.isChecked()){
+                 Intent intent = new Intent();
+                 intent.putExtra("Take", "True");
+                 setResult(RESULT_OK, intent);
+                 finish();
+             }
+             if (checkBox1.isChecked()){
+                 Intent intent = new Intent();
+                 setResult(RESULT_FIRST_USER, intent);
+                 finish();
+             }
+        }
+        if(resultCode == RESULT_FIRST_USER){
+            Toast.makeText(ConfirmActivity.this, "Cash on Delivery", Toast.LENGTH_SHORT).show();
+            if (checkBox2.isChecked()){
+                Intent intent = new Intent();
+                intent.putExtra("Take", "True");
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+            if (checkBox1.isChecked()){
+                Intent intent = new Intent();
+                setResult(RESULT_FIRST_USER, intent);
+                finish();
+            }
         }
     }
 }

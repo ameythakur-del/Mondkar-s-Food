@@ -86,21 +86,22 @@
         </LinearLayout>
     </ScrollView>
     <LinearLayout
-        android:gravity="bottom"
-        android:layout_width="wrap_content"
+        android:padding="20dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Continue"
-            android:textAllCaps="false"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:background="@drawable/round_button"
+            android:text="Send OTP"
+            android:textAllCaps="true"
+            android:backgroundTint="#ED5A6B"
             android:layout_marginTop="16dp"
+            android:textSize="20dp"
+            android:padding="15dp"
             android:textStyle="bold"
+            app:cornerRadius="10dp"
             />
     </LinearLayout>
 </LinearLayout>

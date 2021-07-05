@@ -207,19 +207,21 @@ public class GalleryFragment extends AppCompatActivity {
                                                     } else {
                                                         g = 0;
                                                     }
-                                                    discount.setText("\u20B9" + (d + g));
+                                                    discount.setText("\u20B9" + (d));
                                                     if (cost >= Min) {
                                                         earning.setText("\u20B9" + g);
                                                         dprice.setText("\u20B9" + (cost));
                                                         dcharge.setText("Free");
                                                         dcharge.setTextColor(Color.parseColor("#008000"));
+                                                        if(g > cost - d){
+                                                            g = cost - d;
+                                                        }
                                                         dtotal.setText("\u20B9" + (cost - d - g));
                                                         databaseReference.addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                 if (dataSnapshot.child("Take Away").exists()) {
                                                                     dcharge.setText("Take Away");
-                                                                    dtotal.setText("\u20B9" + (cost - d - g));
                                                                 }
                                                             }
 
@@ -232,12 +234,16 @@ public class GalleryFragment extends AppCompatActivity {
                                                         earning.setText("\u20B9" + g);
                                                         dprice.setText("\u20B9" + (cost));
                                                         dcharge.setText("\u20B9" + charge);
+                                                        if(g > cost - d + ch){
+                                                            g = cost - d + ch;
+                                                        }
                                                         dtotal.setText("\u20B9" + (cost + ch - d - g));
                                                         databaseReference.addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                 if (dataSnapshot.child("Take Away").exists()) {
                                                                     dcharge.setText("Take Away");
+                                                                    g = cost - d;
                                                                     dcharge.setTextColor(Color.parseColor("#008000"));
                                                                     dtotal.setText("\u20B9" + (cost - d - g));
                                                                 }
@@ -338,6 +344,23 @@ public class GalleryFragment extends AppCompatActivity {
                             builder.setSmallIcon(R.drawable.logo);
                             builder.setContentTitle("Thank you for ordering with us !");
                             builder.setContentText("Share your experience with our taste and service here");
+                            builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                            Intent intent = new Intent(com.mondkars.mondkarsproduct.GalleryFragment.this, ContactUs.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(com.mondkars.mondkarsproduct.GalleryFragment.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            builder.setContentIntent(pendingIntent);
+
+                            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(com.mondkars.mondkarsproduct.GalleryFragment.this);
+                            notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+                        }
+
+                        if (dataSnapshot.child("status").getValue().toString().equals("Sorry ! We cant place your order since ")){
+                            createNotificationChannel();
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(com.mondkars.mondkarsproduct.GalleryFragment.this, CHANNEL_ID);
+                            builder.setSmallIcon(R.drawable.logo);
+                            builder.setContentTitle("Sorry, We can't place your order");
+                            builder.setContentText("We are currently not serving in your area. Inconvenience regretted!");
                             builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
                             Intent intent = new Intent(com.mondkars.mondkarsproduct.GalleryFragment.this, ContactUs.class);
