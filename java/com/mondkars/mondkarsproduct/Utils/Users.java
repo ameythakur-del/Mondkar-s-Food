@@ -5,7 +5,7 @@ import android.app.Application;
 public class Users extends Application {
     private String Name;
     private String UserNumber;
-    private String Address, Pincode;
+    private String Address, Pincode, email;
     private static Users instance;
 
     public static Users getInstance(){
@@ -49,6 +49,13 @@ public class Users extends Application {
         Address = address;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
 
 

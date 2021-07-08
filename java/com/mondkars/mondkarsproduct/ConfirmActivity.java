@@ -95,6 +95,12 @@ public class ConfirmActivity extends AppCompatActivity {
                  Toast.makeText(ConfirmActivity.this, "Kindly select any of the above options", Toast.LENGTH_LONG).show();
              }
              else {
+                 int payment = getIntent().getIntExtra("payment", 0);
+                 if(payment == 0){
+                     setResult(RESULT_OK);
+                     finish();
+                     return;
+                 }
                  Intent intent = new Intent(ConfirmActivity.this, PaymentActivity.class);
                  intent.putExtra("payment", getIntent().getIntExtra("payment", 0));
                  startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE);
@@ -133,34 +139,14 @@ public class ConfirmActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == RESULT_OK){
-            Toast.makeText(ConfirmActivity.this, "Payment Successfull", Toast.LENGTH_SHORT).show();
-            if (checkBox2.isChecked()){
-                 Intent intent = new Intent();
-                 intent.putExtra("Take", "True");
-                 setResult(RESULT_OK, intent);
-                 finish();
-             }
-             if (checkBox1.isChecked()){
-                 Intent intent = new Intent();
-                 setResult(RESULT_FIRST_USER, intent);
-                 finish();
-             }
+        Intent intent = new Intent();
+        if(checkBox1.isChecked()){
+            intent.putExtra("Delivery", "HomeDelivery");
         }
-        if(resultCode == RESULT_FIRST_USER){
-            Toast.makeText(ConfirmActivity.this, "Cash on Delivery", Toast.LENGTH_SHORT).show();
-            if (checkBox2.isChecked()){
-                Intent intent = new Intent();
-                intent.putExtra("Take", "True");
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-            if (checkBox1.isChecked()){
-                Intent intent = new Intent();
-                setResult(RESULT_FIRST_USER, intent);
-                finish();
-            }
+        else{
+            intent.putExtra("Delivery", "Take Away");
         }
+        setResult(resultCode, intent);
+        finish();
     }
 }

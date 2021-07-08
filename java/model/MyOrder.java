@@ -11,12 +11,12 @@ public class MyOrder {
     private String number;
     private String userId;
     private String status, message;
-    private String discount;
+    private String discount, paid;
 
     public MyOrder() {
     }
 
-    public MyOrder(String item, String taste, String imageUrl, String price, String per, String delivery, String category, String number, String userId, String status, String message, String discount) {
+    public MyOrder(String item, String taste, String imageUrl, String price, String per, String delivery, String category, String number, String userId, String status, String message, String discount, String paid) {
         this.item = item;
         this.taste = taste;
         this.imageUrl = imageUrl;
@@ -29,6 +29,7 @@ public class MyOrder {
         this.status = status;
         this.message = message;
         this.discount = discount;
+        this.paid = paid;
     }
 
     public String getItem() {
@@ -125,5 +126,13 @@ public class MyOrder {
 
     public void setDiscount(String discount) {
         this.discount = discount;
+    }
+
+    public String getPaid() {
+        return paid;
+    }
+
+    public void setPaid(String paid) {
+        this.paid = paid;
     }
 }

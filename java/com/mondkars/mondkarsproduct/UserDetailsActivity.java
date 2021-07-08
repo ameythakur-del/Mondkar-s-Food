@@ -34,7 +34,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class UserDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText name, address4, address1, address2, address3, pincode;
+    private EditText name, address4, address1, address2, address3, pincode, email;
     Button verify;
     private Button register;
     private ProgressDialog progressDialog;
@@ -59,6 +59,7 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
         register = (Button) findViewById(R.id.save);
         verify = (Button) findViewById(R.id.verify);
         name = (EditText) findViewById(R.id.name);
+        email = (EditText) findViewById(R.id.email);
         register.setOnClickListener(this);
         verify.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
@@ -70,6 +71,7 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
     private void verifySignInCode() {
         {
             final String Name = name.getText().toString().trim();
+            final String Email = email.getText().toString().trim();
             final String Pincode = pincode.getText().toString().trim();
             final String Address = address1.getText().toString().trim() + ", " + address2.getText().toString().trim() + ", " + address3.getText().toString().trim() + ", " + address4.getText().toString().trim() + ", " + pincode.getText().toString();
             {
@@ -87,10 +89,12 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
                                         userObj.put("Name", Name);
                                         userObj.put("Pincode", Pincode);
                                         userObj.put("Address", Address);
+                                        userObj.put("Email", Email);
 
                                         collectionReference.document(currentUserNumber).set(userObj);
 
                                         Users users = Users.getInstance();
+                                        users.setEmail(Email);
                                         users.setName(Name);
                                         users.setUserNumber(currentUserNumber);
                                         users.setPincode(Pincode);
@@ -132,7 +136,10 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
                 return;
             } else if (address1.getText().toString().isEmpty() || address2.getText().toString().isEmpty() || address3.getText().toString().isEmpty()) {
                 Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please complete the address", Toast.LENGTH_LONG).show();
-            } else {
+            } else if(email.getText().toString().isEmpty()){
+                Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please enter your Email", Toast.LENGTH_SHORT).show();
+            }
+            else {
                 sendVerificationCode();
             }
         }

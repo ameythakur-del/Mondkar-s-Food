@@ -1,5 +1,6 @@
 package com.mondkars.mondkarsproduct;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
@@ -16,9 +17,17 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.mondkars.mondkarsproduct.Utils.Users;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
@@ -31,6 +40,10 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
     Button button;
     final String CHANNEL_ID = "personal notifications";
     final int NOTIFICATION_ID = 001;
+    TextView price;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference collectionReference = db.collection("Registering users");
+    String email="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +53,10 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
         cardView1 = findViewById(R.id.online);
         button = findViewById(R.id.confirm);
 
-        cardView1.setChecked(true);
+        price = findViewById(R.id.price);
+        price.setText("\u20B9" + getIntent().getIntExtra("payment", 0));
 
+        cardView1.setChecked(true);
         cardView1.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 //cardView.setChecked(!cardView.isChecked());
@@ -66,30 +81,33 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
             @Override
             public void onClick(View view) {
                 if(cardView1.isChecked()){
-                    String sAmount = "1";
+                    int sAmount = getIntent().getIntExtra("payment", 0);
 
-                    int amount = Math.round(Float.parseFloat(sAmount) * 100);
+                    int amount = Math.round(sAmount * 100);
+                        collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                Checkout checkout = new Checkout();
+                                checkout.setKeyID("rzp_live_wJ90EqBNNAQ1we");
+                                checkout.setImage(R.drawable.logo);
 
-                    Checkout checkout = new Checkout();
-
-                    checkout.setKeyID("rzp_live_wJ90EqBNNAQ1we");
-                    checkout.setImage(R.drawable.logo);
-
-                    JSONObject object = new JSONObject();
-
-                    try {
-                        object.put("name", "Mondkars Food");
-
-                        object.put("description", "Order Charges");
-                        object.put("theme.color", "#0093DD");
-                        object.put("currency", "INR");
-                        object.put("amount", amount);
-                        object.put("prefil.contact", "8766896763");
-                        object.put("prefill.email", "ameya.thakur19@vit.edu");
-                        checkout.open(PaymentActivity.this, object);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                                JSONObject object = new JSONObject();
+                                try {
+                                    object.put("name", "Mondkars Food");
+                                    object.put("description", "Order Charges");
+                                    object.put("theme.color", "#0093DD");
+                                    object.put("currency", "INR");
+                                    object.put("amount", amount);
+                                    object.put("prefill.contact", FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                                    if(value.getString("Email") != null) {
+                                        object.put("prefill.email", value.getString("Email"));
+                                    }
+                                    checkout.open(PaymentActivity.this, object);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                 }
                 else{
                     Intent intent = new Intent();
@@ -148,7 +166,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
 
     @Override
     public void onPaymentError(int i, String s) {
-        Toast.makeText(PaymentActivity.this, "Payment Failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(PaymentActivity.this, s, Toast.LENGTH_LONG).show();
     }
 
     private void createNotificationChannel() {

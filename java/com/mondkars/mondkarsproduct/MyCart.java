@@ -240,6 +240,7 @@ public class MyCart extends AppCompatActivity {
                                                                 }
                                                                 total.setText("\u20B9" + (cost - d - fin));
                                                                 fintotal.setText("\u20B9" + (cost - d - fin));
+                                                                payment = cost - d - fin;
                                                             } else {
                                                                 int h = (d+fin);
                                                                 if(h > 0) {
@@ -298,8 +299,8 @@ public class MyCart extends AppCompatActivity {
                                 Intent intent = new Intent(com.mondkars.mondkarsproduct.MyCart.this, ConfirmActivity.class);
                                 if(getIntent().hasExtra("coupon")){
                                     intent.putExtra("coupon", getIntent().getStringExtra("coupon"));
-                                    intent.putExtra("payment", payment);
                                 }
+                                intent.putExtra("payment", payment);
                                 startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE);
                             }
                         }
@@ -338,6 +339,7 @@ public class MyCart extends AppCompatActivity {
                     String currentDateTimeString1 = java.text.DateFormat.getDateTimeInstance().format(new Date());
                     orderReference = FirebaseDatabase.getInstance().getReference().child("Order").child(user.getPhoneNumber() + cartItem.getItem() + currentDateTimeString1);
                     cartItem.setDiscount(String.valueOf(c));
+                    cartItem.setPaid("True");
                     orderReference.setValue(cartItem);
 
                     OrderForAdmin orderForAdmin = new OrderForAdmin();
@@ -346,6 +348,7 @@ public class MyCart extends AppCompatActivity {
                     orderForAdmin.setPrice(cartItem.getPrice());
                     orderForAdmin.setUserId(currentUserPhone);
                     orderForAdmin.setDiscount(String.valueOf(c));
+                    orderForAdmin.setPaid("True");
                     final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                     adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
                     adminOrder.setValue(orderForAdmin);
@@ -406,6 +409,7 @@ public class MyCart extends AppCompatActivity {
                     String currentDateTimeString1 = java.text.DateFormat.getDateTimeInstance().format(new Date());
                     orderReference = FirebaseDatabase.getInstance().getReference().child("Order").child(currentUserPhone + cartItem.getItem() + cartItem.getNumber() + currentDateTimeString1);
                     cartItem.setDiscount(String.valueOf(c));
+                    cartItem.setPaid("False");
                     orderReference.setValue(cartItem);
 
                     OrderForAdmin orderForAdmin = new OrderForAdmin();
@@ -414,6 +418,7 @@ public class MyCart extends AppCompatActivity {
                     orderForAdmin.setPrice(cartItem.getPrice());
                     orderForAdmin.setUserId(currentUserPhone);
                     orderForAdmin.setDiscount(String.valueOf(c));
+                    orderForAdmin.setPaid("False");
 
                     final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                     adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
@@ -466,7 +471,6 @@ public class MyCart extends AppCompatActivity {
                 startActivity(fintent);
                 finish();
             }
-
         }
     }
 }

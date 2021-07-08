@@ -47,6 +47,13 @@ public class OrderRecyclerAdapter extends RecyclerView.Adapter<OrderRecyclerAdap
         viewHolder.price.setText("\u20B9" +order.getPrice());
         viewHolder.delivery.setText(order.getDelivery());
         viewHolder.per.setText(order.getPer());
+        if(order.getPaid().equals("True")){
+            viewHolder.paid.setText("Amount Paid");
+        }
+        else{
+            viewHolder.paid.setText("Cash on Delivery");
+        }
+
 
         viewHolder.quantity.setText(order.getNumber());
 
@@ -79,7 +86,8 @@ public class OrderRecyclerAdapter extends RecyclerView.Adapter<OrderRecyclerAdap
                 price,
                 delivery,
                 quantity,
-                per;
+                per,
+                paid;
         DatabaseReference databaseReference;
         public FirebaseAuth firebaseAuth;
 
@@ -98,6 +106,7 @@ public class OrderRecyclerAdapter extends RecyclerView.Adapter<OrderRecyclerAdap
             delivery = itemView.findViewById(R.id.order_delivers_in);
             image = itemView.findViewById(R.id.order_image_list);
             image.setOnClickListener(this);
+            paid = itemView.findViewById(R.id.paid);
         }
 
         @Override
