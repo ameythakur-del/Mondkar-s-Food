@@ -5,4 +5,9 @@
     <string name="Rs">\u20B9</string>
     <string name="channel_name">Mondkar\'s Food</string>
     <string name="channel_description">Thank you !</string>
+
+    <string-array name="Specialization_array">
+        <item>Select City</item>
+        <item>Sawantwadi</item>
+    </string-array>
 </resources>

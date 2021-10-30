@@ -2,6 +2,7 @@ package com.mondkars.mondkarsproduct;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -44,17 +45,38 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Registering users");
     String email="";
+    String number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         cardView1 = findViewById(R.id.online);
         button = findViewById(R.id.confirm);
 
         price = findViewById(R.id.price);
         price.setText("\u20B9" + getIntent().getIntExtra("payment", 0));
+
+        int sAmount = getIntent().getIntExtra("payment", 0);
+
+        int amount = Math.round(sAmount * 100);
+
+        String pay = String.valueOf(amount);
+
+        number = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+
+        collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    if(value.getString("Email") != null) {
+                        email = value.getString("Email");
+                    }
+            }
+        });
 
         cardView1.setChecked(true);
         cardView1.setOnClickListener(new View.OnClickListener() {
@@ -81,33 +103,24 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
             @Override
             public void onClick(View view) {
                 if(cardView1.isChecked()){
-                    int sAmount = getIntent().getIntExtra("payment", 0);
-
-                    int amount = Math.round(sAmount * 100);
-                        collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                                Checkout checkout = new Checkout();
-                                checkout.setKeyID("rzp_live_wJ90EqBNNAQ1we");
-                                checkout.setImage(R.drawable.logo);
-
-                                JSONObject object = new JSONObject();
-                                try {
-                                    object.put("name", "Mondkars Food");
-                                    object.put("description", "Order Charges");
-                                    object.put("theme.color", "#0093DD");
-                                    object.put("currency", "INR");
-                                    object.put("amount", amount);
-                                    object.put("prefill.contact", FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-                                    if(value.getString("Email") != null) {
-                                        object.put("prefill.email", value.getString("Email"));
-                                    }
-                                    checkout.open(PaymentActivity.this, object);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                    Checkout checkout = new Checkout();
+                    checkout.setKeyID("rzp_live_wJ90EqBNNAQ1we");
+                    checkout.setImage(R.drawable.main);
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("name", "Mondkars Food");
+                        object.put("description", "Order Charges");
+                        object.put("theme.color", "#b83d0f");
+                        object.put("currency", "INR");
+                        object.put("amount", pay);
+                        object.put("prefill.contact", number);
+                        if(email != "") {
+                            object.put("prefill.email", email);
+                        }
+                        checkout.open(PaymentActivity.this, object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else{
                     Intent intent = new Intent();
@@ -141,6 +154,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
 //            }
 //        });
     }
+
     @Override
     public void onPaymentSuccess(String s) {
         Intent intent = new Intent();
@@ -166,7 +180,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
 
     @Override
     public void onPaymentError(int i, String s) {
-        Toast.makeText(PaymentActivity.this, s, Toast.LENGTH_LONG).show();
+        Toast.makeText(PaymentActivity.this, "Payment Failed", Toast.LENGTH_LONG).show();
     }
 
     private void createNotificationChannel() {

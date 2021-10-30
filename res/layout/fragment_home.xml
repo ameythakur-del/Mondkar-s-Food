@@ -126,8 +126,76 @@
             android:id="@+id/viewpager_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
+
+
     </LinearLayout>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cart_card"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="View Cart"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/colorAccent"
+                android:checkable="true"
+                android:id="@+id/view_cart">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/number_items"/>
+
+                        <TextView
+                            android:textColor="#FFFFFF"
+                            android:textSize="25dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/total_price"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end">
+
+                        <TextView
+                            android:textColor="#FFFFFF"
+                            android:textSize="20dp"
+                            android:layout_margin="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View Cart"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.cardview.widget.CardView>
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"

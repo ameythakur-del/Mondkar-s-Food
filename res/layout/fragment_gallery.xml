@@ -18,17 +18,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/cart_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_assignment_returned_black_24dp"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3"/>
     <TextView
+        android:visibility="invisible"
         android:id="@+id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,18 +37,17 @@
         android:textColor="#000000"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/offer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start exploring, Start buying !"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +76,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:visibility="invisible"
                     app:cardElevation="10dp">
 
                     <LinearLayout
@@ -107,7 +106,7 @@
                                 android:layout_height="wrap_content"
                                 android:clickable="true"
                                 android:textColor="#0000FF"
-                                android:visibility="gone" />
+                                />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -124,7 +123,6 @@
                     android:id="@+id/cardview2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
                     android:layout_marginBottom="75dp">
 
 
@@ -279,7 +277,6 @@
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
     <Button
-        android:visibility="invisible"
         android:id="@+id/track"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +33,8 @@ public class MyMoney extends AppCompatActivity {
         rs = findViewById(R.id.rs);
         desc = findViewById(R.id.desc);
         earn = findViewById(R.id.earn);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         DatabaseReference totalReference = FirebaseDatabase.getInstance().getReference().child("Total Money").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());

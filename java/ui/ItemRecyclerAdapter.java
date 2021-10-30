@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
@@ -205,7 +206,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                     data.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getValue().toString().equals("True")){
+                            if (dataSnapshot.getValue().toString().equals("True") && !item.getCategory().equals("Masalyache Padartha")){
                                 Toast.makeText(context, "Sorry! We are not serving now", Toast.LENGTH_LONG).show();
                             }
                             else {
@@ -291,7 +292,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                         data.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue().toString().equals("True")){
+                                if (dataSnapshot.getValue().toString().equals("True") && !item.getCategory().equals("Masalyache Padartha")){
                                     Toast.makeText(context, "Sorry, We are not serving now", Toast.LENGTH_LONG).show();
                                 }
                                 else {

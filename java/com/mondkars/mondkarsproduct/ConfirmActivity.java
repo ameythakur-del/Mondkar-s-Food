@@ -1,7 +1,9 @@
 package com.mondkars.mondkarsproduct;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -19,6 +21,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.mondkars.mondkarsproduct.Utils.Users;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +51,8 @@ public class ConfirmActivity extends AppCompatActivity {
     Timer timer;
     DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Availed");
     private static final int SECOND_ACTIVITY_REQUEST_CODE = 0;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("charge");
+    int payment=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,8 @@ public class ConfirmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_confirm);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         currentUserId = user.getPhoneNumber();
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         checkBox1 = findViewById(R.id.home_check);
         checkBox1.setChecked(true);
@@ -95,15 +104,28 @@ public class ConfirmActivity extends AppCompatActivity {
                  Toast.makeText(ConfirmActivity.this, "Kindly select any of the above options", Toast.LENGTH_LONG).show();
              }
              else {
-                 int payment = getIntent().getIntExtra("payment", 0);
+                 payment = getIntent().getIntExtra("payment", 0);
                  if(payment == 0){
                      setResult(RESULT_OK);
                      finish();
                      return;
                  }
-                 Intent intent = new Intent(ConfirmActivity.this, PaymentActivity.class);
-                 intent.putExtra("payment", getIntent().getIntExtra("payment", 0));
-                 startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE);
+                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                     @Override
+                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                         if(payment < Integer.parseInt(snapshot.child("Min").getValue().toString()) && checkBox2.isChecked()){
+                             payment -= Integer.parseInt(snapshot.child("delivery").getValue().toString());
+                         }
+                         Intent intent = new Intent(ConfirmActivity.this, PaymentActivity.class);
+                         intent.putExtra("payment", payment);
+                         startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE);
+                     }
+
+                     @Override
+                     public void onCancelled(@NonNull DatabaseError error) {
+
+                     }
+                 });
              }
 
          }

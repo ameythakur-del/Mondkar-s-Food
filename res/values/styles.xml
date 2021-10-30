@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="colorPrimary">#b83d0f</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -15,11 +16,12 @@
         <item name="colorPrimaryDark">#000000</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">#b83d0f </item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -42,6 +44,15 @@
         <item name="android:statusBarColor">#A52A2A</item>
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorAccent">#ED5A6B</item>
+    </style>
+
+
+    <style name="main2activity" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">#ED5A6B</item>
+        <item name="android:statusBarColor">#A52A2A</item>
+        <item name="colorPrimary">#b83d0f </item>
     </style>
 
     <style name="ColorTheme10" parent="Theme.MaterialComponents.DayNight.Bridge">
@@ -81,7 +92,7 @@
         <item name="colorPrimary">#b83d0f </item>
         <item name="title">Change Address</item>
         <item name="android:statusBarColor">#A52A2A</item>
-        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorPrimary">#000000</item>
         <item name="colorAccent">#ED5A6B</item>
     </style>
 
@@ -97,7 +108,8 @@
         <item name="colorPrimary">#b83d0f</item>
         <item name="title">Enter your details</item>
         <item name="android:statusBarColor">#A52A2A</item>
-        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorAccent">#ED5A6B</item>
     </style>
     <style name="OTPActivity" parent="Theme.MaterialComponents.DayNight.Bridge">

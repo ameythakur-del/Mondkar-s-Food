@@ -1,6 +1,7 @@
 package com.mondkars.mondkarsproduct;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,8 @@ public class Update extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         button = findViewById(R.id.update);
         button.setOnClickListener(new View.OnClickListener() {

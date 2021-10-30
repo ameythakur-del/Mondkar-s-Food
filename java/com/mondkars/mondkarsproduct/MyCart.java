@@ -3,6 +3,8 @@ package com.mondkars.mondkarsproduct;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +50,7 @@ public class MyCart extends AppCompatActivity {
     private static final int SECOND_ACTIVITY_REQUEST_CODE = 0;
     TextView offer;
     ImageView cartIcon;
+    String takeAway="";
     int d = 0;
     public List<CartItem> myCart;
     public RecyclerView recyclerView;
@@ -62,7 +66,8 @@ public class MyCart extends AppCompatActivity {
     String currentUserId = user.getUid();
     String currentUserPhone = user.getPhoneNumber();
     private ProgressBar progressBar;
-    public Button change, buy, coupon;
+    public Button change, buy;
+//    Button coupon;
     String charge, min;
     int ch = 0;
     int Min = 0;
@@ -80,11 +85,13 @@ public class MyCart extends AppCompatActivity {
     String marketer = null;
     DatabaseReference giftReference = marketers.child(currentUserPhone);
     TextView totalSave;
+    DatabaseReference faraalReference = FirebaseDatabase.getInstance().getReference().child("Faraal Orders");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         myCart = new ArrayList<CartItem>();
         notext = findViewById(R.id.notext);
         nowarning = findViewById(R.id.nowarning);
@@ -100,7 +107,7 @@ public class MyCart extends AppCompatActivity {
         card3 = findViewById(R.id.card3);
         empty = findViewById(R.id.empty);
         discount = findViewById(R.id.disconted_price);
-        coupon = findViewById(R.id.coupon);
+//        coupon = findViewById(R.id.coupon);
         buy = findViewById(R.id.buy_all);
         change = findViewById(R.id.change);
         address = findViewById(R.id.address_view);
@@ -119,19 +126,26 @@ public class MyCart extends AppCompatActivity {
         minReference = FirebaseDatabase.getInstance().getReference().child("charge").child("Min");
 
 
-        data.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue().toString().equals("True")) {
-                    noimage.setVisibility(View.VISIBLE);
-                    notext.setVisibility(View.VISIBLE);
-                    nowarning.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    card1.setVisibility(View.INVISIBLE);
-                    card2.setVisibility(View.INVISIBLE);
-                    card3.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.INVISIBLE);
-                } else {
+        if(user != null){
+
+            collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if(value.getString("City") != null) {
+                        if (value.getString("City").equals("Sawantwadi")) {
+//                           coupon.setVisibility(View.VISIBLE);
+                        }
+                        else{
+//                            coupon.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                    else{
+//                       coupon.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+{
                     recyclerView.setVisibility(View.VISIBLE);
                     noimage.setVisibility(View.INVISIBLE);
                     notext.setVisibility(View.INVISIBLE);
@@ -305,22 +319,15 @@ public class MyCart extends AppCompatActivity {
                             }
                         }
                     });
-                    coupon.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            finish();
-                            startActivity(new Intent(com.mondkars.mondkarsproduct.MyCart.this, CouponActivity.class));
-                        }
-                    });
+//                    coupon.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            finish();
+//                            startActivity(new Intent(com.mondkars.mondkarsproduct.MyCart.this, CouponActivity.class));
+//                        }
+//                    });
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -328,6 +335,11 @@ public class MyCart extends AppCompatActivity {
 
         // Check that it is the SecondActivity with an OK result
         // Check that it is thedonor SecondActivity with an OK result
+
+        if (data.hasExtra("Delivery")){
+            takeAway = data.getStringExtra("Delivery");
+        }
+
        {
 
             if (resultCode == RESULT_OK) {
@@ -340,41 +352,72 @@ public class MyCart extends AppCompatActivity {
                     orderReference = FirebaseDatabase.getInstance().getReference().child("Order").child(user.getPhoneNumber() + cartItem.getItem() + currentDateTimeString1);
                     cartItem.setDiscount(String.valueOf(c));
                     cartItem.setPaid("True");
-                    orderReference.setValue(cartItem);
 
-                    OrderForAdmin orderForAdmin = new OrderForAdmin();
-                    orderForAdmin.setItem(cartItem.getItem());
-                    orderForAdmin.setNumber(cartItem.getNumber());
-                    orderForAdmin.setPrice(cartItem.getPrice());
-                    orderForAdmin.setUserId(currentUserPhone);
-                    orderForAdmin.setDiscount(String.valueOf(c));
-                    orderForAdmin.setPaid("True");
-                    final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                    adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
-                    adminOrder.setValue(orderForAdmin);
+                    if(!cartItem.getCategory().equals("Masalyache Padartha")) {
+                        orderReference.setValue(cartItem);
 
-                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
-                    final CollectionReference collectionReference = db.collection("Registering users");
+                        OrderForAdmin orderForAdmin = new OrderForAdmin();
+                        orderForAdmin.setItem(cartItem.getItem());
+                        orderForAdmin.setNumber(cartItem.getNumber());
+                        orderForAdmin.setPrice(cartItem.getPrice());
+                        orderForAdmin.setUserId(currentUserPhone);
+                        orderForAdmin.setDiscount(String.valueOf(c));
+                        orderForAdmin.setPaid("True");
+                        final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                        adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
+                        adminOrder.setValue(orderForAdmin);
 
-                    collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            {
+                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
+                        final CollectionReference collectionReference = db.collection("Registering users");
 
-                                if (value.exists()) {
-                                    {
-                                        Map<String, String> userObj = new HashMap<>();
-                                        userObj.put("Mobile", value.getId());
-                                        userObj.put("Name", value.getString("Name"));
-                                        userObj.put("Pincode", value.getString("Pincode"));
-                                        userObj.put("Address", value.getString("Address"));
-                                        userObj.put("ReferralNumber", marketer);
-                                        ref.setValue(userObj);
+                        collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                {
+
+                                    if (value.exists()) {
+                                        {
+                                            Map<String, String> userObj = new HashMap<>();
+                                            userObj.put("Mobile", value.getId());
+                                            userObj.put("Name", value.getString("Name"));
+                                            userObj.put("Pincode", value.getString("Pincode"));
+                                            userObj.put("Address", value.getString("Address"));
+                                            userObj.put("ReferralNumber", marketer);
+                                            if (takeAway.equals("Take Away")) {
+                                                userObj.put("Take Away", "True");
+                                            }
+                                            ref.setValue(userObj);
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else{
+                        collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                {
+
+                                    if (value.exists()) {
+                                        {
+                                            Map<String, String> userObj = new HashMap<>();
+                                            userObj.put("Mobile", value.getId());
+                                            userObj.put("Name", value.getString("Name"));
+                                            userObj.put("Pincode", value.getString("Pincode"));
+                                            userObj.put("Address", value.getString("Address"));
+                                            userObj.put("ReferralNumber", marketer);
+                                            if (takeAway.equals("Take Away")) {
+                                                userObj.put("Take Away", "True");
+                                            }
+                                            faraalReference.child(user.getPhoneNumber()).setValue(userObj);
+                                            faraalReference.child(user.getPhoneNumber()).child(cartItem.getItem()).setValue(cartItem);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
                 Query query = reference.orderByChild("userId").equalTo(currentUserPhone);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -410,43 +453,72 @@ public class MyCart extends AppCompatActivity {
                     orderReference = FirebaseDatabase.getInstance().getReference().child("Order").child(currentUserPhone + cartItem.getItem() + cartItem.getNumber() + currentDateTimeString1);
                     cartItem.setDiscount(String.valueOf(c));
                     cartItem.setPaid("False");
-                    orderReference.setValue(cartItem);
 
-                    OrderForAdmin orderForAdmin = new OrderForAdmin();
-                    orderForAdmin.setItem(cartItem.getItem());
-                    orderForAdmin.setNumber(cartItem.getNumber());
-                    orderForAdmin.setPrice(cartItem.getPrice());
-                    orderForAdmin.setUserId(currentUserPhone);
-                    orderForAdmin.setDiscount(String.valueOf(c));
-                    orderForAdmin.setPaid("False");
+                    if(!cartItem.getCategory().equals("Masalyache Padartha")) {
+                        orderReference.setValue(cartItem);
+                        OrderForAdmin orderForAdmin = new OrderForAdmin();
+                        orderForAdmin.setItem(cartItem.getItem());
+                        orderForAdmin.setNumber(cartItem.getNumber());
+                        orderForAdmin.setPrice(cartItem.getPrice());
+                        orderForAdmin.setUserId(currentUserPhone);
+                        orderForAdmin.setDiscount(String.valueOf(c));
+                        orderForAdmin.setPaid("False");
 
-                    final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                    adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
-                    adminOrder.setValue(orderForAdmin);
+                        final String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+                        adminOrder = FirebaseDatabase.getInstance().getReference().child("Order for admin").child(user.getPhoneNumber()).child(cartItem.getItem() + cartItem.getPer() + cartItem.getNumber() + currentDateTimeString);
+                        adminOrder.setValue(orderForAdmin);
 
-                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
-                    final CollectionReference collectionReference = db.collection("Registering users");
+                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getPhoneNumber());
+                        final CollectionReference collectionReference = db.collection("Registering users");
 
-                    collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            {
+                        collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                {
 
-                                if (value.exists()) {
-                                    {
-
-                                        Map<String, String> userObj = new HashMap<>();
-                                        userObj.put("Mobile", value.getId());
-                                        userObj.put("Name", value.getString("Name"));
-                                        userObj.put("Pincode", value.getString("Pincode"));
-                                        userObj.put("Address", value.getString("Address"));
-                                        userObj.put("ReferralNumber", marketer);
-                                        ref.setValue(userObj);
+                                    if (value.exists()) {
+                                        {
+                                            Map<String, String> userObj = new HashMap<>();
+                                            userObj.put("Mobile", value.getId());
+                                            userObj.put("Name", value.getString("Name"));
+                                            userObj.put("Pincode", value.getString("Pincode"));
+                                            userObj.put("Address", value.getString("Address"));
+                                            userObj.put("ReferralNumber", marketer);
+                                            if (takeAway.equals("Take Away")) {
+                                                userObj.put("Take Away", "True");
+                                            }
+                                            ref.setValue(userObj);
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else{
+                        collectionReference.document(currentUserPhone).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                {
+
+                                    if (value.exists()) {
+                                        {
+                                            Map<String, String> userObj = new HashMap<>();
+                                            userObj.put("Mobile", value.getId());
+                                            userObj.put("Name", value.getString("Name"));
+                                            userObj.put("Pincode", value.getString("Pincode"));
+                                            userObj.put("Address", value.getString("Address"));
+                                            userObj.put("ReferralNumber", marketer);
+                                            if (takeAway.equals("Take Away")) {
+                                                userObj.put("Take Away", "True");
+                                            }
+                                            faraalReference.child(user.getPhoneNumber()).setValue(userObj);
+                                            faraalReference.child(user.getPhoneNumber()).child(cartItem.getItem()).setValue(cartItem);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
                 Query query = reference.orderByChild("userId").equalTo(currentUserPhone);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {

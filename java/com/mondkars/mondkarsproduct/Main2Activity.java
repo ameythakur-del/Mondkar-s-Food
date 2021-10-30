@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -27,9 +28,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mondkars.mondkarsproduct.ui.home.FirstFragment;
+import com.mondkars.mondkarsproduct.ui.home.SecondFragment;
+import com.mondkars.mondkarsproduct.ui.home.ThirdFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -62,6 +67,8 @@ public class Main2Activity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         updateNavHeader();
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -125,35 +132,70 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-
-        if(user != null){
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
-                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-                        menu.getItem(0).setTitle(s);
-                    }
-                    else{
-                        SpannableString s = new SpannableString("Earnings");
-                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-                        menu.getItem(0).setTitle(s);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-        else{
-            SpannableString s = new SpannableString("Earnings");
-            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-            menu.getItem(0).setTitle(s);
-        }
+//
+//        if(user != null){
+//            collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                    if(value.getString("City") != null) {
+//                        if (value.getString("City").equals("Sawantwadi")) {
+//                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
+//                            databaseReference.addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    if(snapshot.exists()){
+//                                        SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
+//                                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+//                                        menu.getItem(0).setTitle(s);
+//                                    }
+//                                    else{
+//                                        SpannableString s = new SpannableString("Earnings");
+//                                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+//                                        menu.getItem(0).setTitle(s);
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                }
+//                            });
+//                        }
+//                        else {
+//                            menu.getItem(0).setVisible(false);
+//                        }
+//                    }
+//                    else{
+//                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
+//                        databaseReference.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                if(snapshot.exists()){
+//                                    SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
+//                                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+//                                    menu.getItem(0).setTitle(s);
+//                                }
+//                                else{
+//                                    SpannableString s = new SpannableString("Earnings");
+//                                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+//                                    menu.getItem(0).setTitle(s);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//                    }
+//                }
+//            });
+//        }
+//        else{
+//            SpannableString s = new SpannableString("Earnings");
+//            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+//            menu.getItem(0).setTitle(s);
+//        }
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -369,16 +369,16 @@
                         android:textSize="20dp"
                         android:textStyle="bold" />
                 </RelativeLayout>
-                    <Button
-                        android:layout_gravity="center_horizontal"
-                        android:background="@android:color/transparent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Apply Coupon Code"
-                        android:id="@+id/coupon"
-                        android:textAllCaps="false"
-                        android:textColor="#ED5A6B"
-                        android:layout_marginLeft="10dp"/>
+<!--                    <Button-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Apply Coupon Code"-->
+<!--                        android:id="@+id/coupon"-->
+<!--                        android:textAllCaps="false"-->
+<!--                        android:textColor="#ED5A6B"-->
+<!--                        android:layout_marginLeft="10dp"/>-->
                     <TextView
                         android:enabled="false"
                         android:layout_marginLeft="10dp"

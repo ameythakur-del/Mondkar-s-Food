@@ -1,11 +1,14 @@
 package com.mondkars.mondkarsproduct;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,40 +42,50 @@ public class wishlist extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_wishlist);
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         recyclerView = findViewById(R.id.wish_view);
         progressBar = findViewById(R.id.wish_progress);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("wish");
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         user = FirebaseAuth.getInstance().getCurrentUser();
-        String currentUserId = user.getPhoneNumber();
-        {
+        if(user != null) {
+            String currentUserId = user.getPhoneNumber();
             {
                 {
-                    Query query = databaseReference.orderByChild("userId").equalTo(currentUserId);
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            wishList = new ArrayList<Wish>();
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                {
-                                    Wish ameya = dataSnapshot1.getValue(Wish.class);
+                    {
+                        Query query = databaseReference.orderByChild("userId").equalTo(currentUserId);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                wishList = new ArrayList<Wish>();
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                     {
-                                         wishList.add(ameya);
+                                        Wish ameya = dataSnapshot1.getValue(Wish.class);
+                                        {
+                                            wishList.add(ameya);
+                                        }
                                     }
                                 }
+                                wishRecyclerAdapter = new WishRecyclerAdapter(wishlist.this, wishList);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                recyclerView.setAdapter(wishRecyclerAdapter);
+                                wishRecyclerAdapter.notifyDataSetChanged();
                             }
-                            wishRecyclerAdapter = new WishRecyclerAdapter(wishlist.this, wishList);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            recyclerView.setAdapter(wishRecyclerAdapter);
-                            wishRecyclerAdapter.notifyDataSetChanged();
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    }
                 }
             }
+        }
+        else{
+            startActivity(new Intent(this, Activity2.class));
+            finish();
+            Toast.makeText(this, "You need to login first to see your favourites", Toast.LENGTH_LONG).show();
         }
     }
 }

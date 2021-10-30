@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -63,6 +64,7 @@ public class GalleryFragment extends AppCompatActivity {
     DatabaseReference limit = FirebaseDatabase.getInstance().getReference().child("Availed").child(currentUserId);
     DatabaseReference limitnot = FirebaseDatabase.getInstance().getReference().child("limit");
     DatabaseReference location = FirebaseDatabase.getInstance().getReference().child("Location");
+    DatabaseReference faraalOrders = FirebaseDatabase.getInstance().getReference().child("Faraal Orders");
     int off = 0;
 
     String charge, min;
@@ -78,6 +80,8 @@ public class GalleryFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_gallery);
         myOrders = new ArrayList<MyOrder>();
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         earning = findViewById(R.id.earning_discount_price);
         button = findViewById(R.id.track);
@@ -151,6 +155,7 @@ public class GalleryFragment extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 myOrders = new ArrayList<MyOrder>();
+                                cost = 0;
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                     {
                                         final MyOrder ameya = dataSnapshot1.getValue(MyOrder.class);
@@ -161,121 +166,147 @@ public class GalleryFragment extends AppCompatActivity {
                                         myOrders.add(ameya);
                                     }
                                 }
-                                if (myOrders.toString() == "[]") {
+                                if (myOrders.toString() == "[]"){
                                     button.setVisibility(View.INVISIBLE);
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    cardView1.setVisibility(View.INVISIBLE);
-                                    recyclerView.setVisibility(View.INVISIBLE);
-                                    cardView2.setVisibility(View.INVISIBLE);
-                                    imageView.setVisibility(View.VISIBLE);
-                                    textView1.setVisibility(View.VISIBLE);
-                                    textView2.setVisibility(View.VISIBLE);
-                                } else {
-                                    button.setVisibility(View.VISIBLE);
-                                    cardView1.setVisibility(View.VISIBLE);
-                                    cardView2.setVisibility(View.VISIBLE);
-
-                                    minReference.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            min = dataSnapshot.getValue().toString();
-                                            Min = Integer.valueOf(min);
+                                    cardView1.removeAllViews();
+                                }
+                                faraalOrders.child(user.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()){
+                                            for(DataSnapshot dataSnapshot4: snapshot.getChildren()) {
+                                                if(dataSnapshot4.getChildrenCount() > 1) {
+                                                    MyOrder ameya = dataSnapshot4.getValue(MyOrder.class);
+                                                    int temp = Integer.parseInt(ameya.getPrice());
+                                                    int temp2 = Integer.parseInt(ameya.getNumber());
+                                                    d = d + Integer.parseInt(ameya.getDiscount());
+                                                    cost = cost + temp * temp2;
+                                                    myOrders.add(ameya);
+                                                }
+                                            }
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                        if (myOrders.toString() == "[]") {
+                                            button.setVisibility(View.INVISIBLE);
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            cardView1.setVisibility(View.INVISIBLE);
+                                            recyclerView.setVisibility(View.INVISIBLE);
+                                            cardView2.setVisibility(View.INVISIBLE);
+                                            imageView.setVisibility(View.VISIBLE);
+                                            textView1.setVisibility(View.VISIBLE);
+                                            textView2.setVisibility(View.VISIBLE);
                                         }
-                                    });
-
-                                    dileveryReference.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            charge = dataSnapshot.getValue().toString();
-                                            ch = Integer.valueOf(charge);
-
-                                            DatabaseReference giftReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(currentUserPhone);
-
-                                            giftReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        else {
+                                            minReference.addValueEventListener(new ValueEventListener() {
                                                 @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    min = dataSnapshot.getValue().toString();
+                                                    Min = Integer.valueOf(min);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+                                            dileveryReference.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    charge = dataSnapshot.getValue().toString();
+                                                    ch = Integer.valueOf(charge);
+
+                                                    DatabaseReference giftReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(currentUserPhone);
+
+                                                    giftReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if (snapshot.exists()) {
 //                                stotal.setText("\u20B9" + snapshot.child("money").getValue().toString());
 //                                fintotal.setText("\u20B9" + (cost + ch - d - Integer.parseInt(snapshot.child("money").getValue().toString())));
-                                                        g = Integer.parseInt(snapshot.child("money").getValue().toString());
+                                                                g = Integer.parseInt(snapshot.child("money").getValue().toString());
 
-                                                    } else {
-                                                        g = 0;
-                                                    }
-                                                    discount.setText("\u20B9" + (d));
-                                                    if (cost >= Min) {
-                                                        earning.setText("\u20B9" + g);
-                                                        dprice.setText("\u20B9" + (cost));
-                                                        dcharge.setText("Free");
-                                                        dcharge.setTextColor(Color.parseColor("#008000"));
-                                                        if(g > cost - d){
-                                                            g = cost - d;
-                                                        }
-                                                        dtotal.setText("\u20B9" + (cost - d - g));
-                                                        databaseReference.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                if (dataSnapshot.child("Take Away").exists()) {
-                                                                    dcharge.setText("Take Away");
-                                                                }
+                                                            } else {
+                                                                g = 0;
                                                             }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-                                                    } else {
-                                                        earning.setText("\u20B9" + g);
-                                                        dprice.setText("\u20B9" + (cost));
-                                                        dcharge.setText("\u20B9" + charge);
-                                                        if(g > cost - d + ch){
-                                                            g = cost - d + ch;
-                                                        }
-                                                        dtotal.setText("\u20B9" + (cost + ch - d - g));
-                                                        databaseReference.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                if (dataSnapshot.child("Take Away").exists()) {
-                                                                    dcharge.setText("Take Away");
+                                                            discount.setText("\u20B9" + (d));
+                                                            if (cost >= Min) {
+                                                                earning.setText("\u20B9" + g);
+                                                                dprice.setText("\u20B9" + (cost));
+                                                                dcharge.setText("Free");
+                                                                dcharge.setTextColor(Color.parseColor("#008000"));
+                                                                if(g > cost - d){
                                                                     g = cost - d;
-                                                                    dcharge.setTextColor(Color.parseColor("#008000"));
-                                                                    dtotal.setText("\u20B9" + (cost - d - g));
                                                                 }
+                                                                dtotal.setText("\u20B9" + (cost - d - g));
+                                                                databaseReference.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        if (dataSnapshot.child("Take Away").exists()) {
+                                                                            dcharge.setText("Take Away");
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                earning.setText("\u20B9" + g);
+                                                                dprice.setText("\u20B9" + (cost));
+                                                                dcharge.setText("\u20B9" + charge);
+                                                                if(g > cost - d + ch){
+                                                                    g = cost - d + ch;
+                                                                }
+                                                                dtotal.setText("\u20B9" + (cost + ch - d - g));
+                                                                databaseReference.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        if (dataSnapshot.child("Take Away").exists()) {
+                                                                            dcharge.setText("Take Away");
+                                                                            if(g > cost - d) {
+                                                                                g = cost - d;
+                                                                            }
+                                                                            dcharge.setTextColor(Color.parseColor("#008000"));
+                                                                            dtotal.setText("\u20B9" + (cost - d - g));
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
                                                             }
 
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            progressBar.setVisibility(View.INVISIBLE);
+                                                            orderRecyclerAdapter = new OrderRecyclerAdapter(com.mondkars.mondkarsproduct.GalleryFragment.this, myOrders);
+                                                            recyclerView.setAdapter(orderRecyclerAdapter);
+                                                            orderRecyclerAdapter.notifyDataSetChanged();
+                                                        }
 
-                                                            }
-                                                        });
-
-                                                    }
-
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    orderRecyclerAdapter = new OrderRecyclerAdapter(com.mondkars.mondkarsproduct.GalleryFragment.this, myOrders);
-                                                    recyclerView.setAdapter(orderRecyclerAdapter);
-                                                    orderRecyclerAdapter.notifyDataSetChanged();
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                            Toast.makeText(com.mondkars.mondkarsproduct.GalleryFragment.this, "Network error", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                                 }
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    Toast.makeText(com.mondkars.mondkarsproduct.GalleryFragment.this, "Network error", Toast.LENGTH_SHORT).show();
+
                                                 }
                                             });
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                        }
-                                    });
-                                }
+                                    }
+                                });
+
                             }
 
                             @Override

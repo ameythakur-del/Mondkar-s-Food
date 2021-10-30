@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,8 +37,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class UserDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText name, address4, address1, address2, address3, pincode, email;
-    Button verify;
+    private EditText name, address1, address2, email;
     private Button register;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
@@ -43,37 +45,41 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     DatabaseReference databaseReference;
     private CollectionReference collectionReference = db.collection("Registering users");
-    DatabaseReference pincodes = FirebaseDatabase.getInstance().getReference().child("Pincodes");
+    DatabaseReference cities = FirebaseDatabase.getInstance().getReference().child("Cities");
+    Spinner staticSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        staticSpinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
+                .createFromResource(this, R.array.Specialization_array,
+                        android.R.layout.simple_spinner_item);
+        staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        staticSpinner.setAdapter(staticAdapter);
+
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         address1 = (EditText) findViewById(R.id.house);
-        pincode = (EditText) findViewById(R.id.pincode);
-        address4 = (EditText) findViewById(R.id.state);
         address2 = (EditText) findViewById(R.id.road);
-        address3 = (EditText) findViewById(R.id.city);
         register = (Button) findViewById(R.id.save);
-        verify = (Button) findViewById(R.id.verify);
         name = (EditText) findViewById(R.id.name);
         email = (EditText) findViewById(R.id.email);
         register.setOnClickListener(this);
-        verify.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
         firebaseAuth = FirebaseAuth.getInstance();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     private void verifySignInCode() {
         {
             final String Name = name.getText().toString().trim();
             final String Email = email.getText().toString().trim();
-            final String Pincode = pincode.getText().toString().trim();
-            final String Address = address1.getText().toString().trim() + ", " + address2.getText().toString().trim() + ", " + address3.getText().toString().trim() + ", " + address4.getText().toString().trim() + ", " + pincode.getText().toString();
+            String City = staticSpinner.getSelectedItem().toString();
+            final String Address = address1.getText().toString().trim() + ", " + address2.getText().toString().trim() + ", " + staticSpinner.getSelectedItem().toString();
             {
                 {
                     {
@@ -87,7 +93,7 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
                                         final String currentUserNumber = currentUser.getPhoneNumber();
                                         Map<String, String> userObj = new HashMap<>();
                                         userObj.put("Name", Name);
-                                        userObj.put("Pincode", Pincode);
+                                        userObj.put("City", City);
                                         userObj.put("Address", Address);
                                         userObj.put("Email", Email);
 
@@ -97,7 +103,7 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
                                         users.setEmail(Email);
                                         users.setName(Name);
                                         users.setUserNumber(currentUserNumber);
-                                        users.setPincode(Pincode);
+                                        users.setCity(City);
                                         users.setAddress(Address);
                                         Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Your details are saved successfully.", Toast.LENGTH_LONG).show();
                                         progressDialog.dismiss();
@@ -124,62 +130,34 @@ public class UserDetailsActivity extends AppCompatActivity implements View.OnCli
             progressDialog.setMessage("Saving your details");
             progressDialog.show();
             final String Name = name.getText().toString().trim();
-            final String Pincode = pincode.getText().toString().trim();
-            final String Address = address1.getText().toString().trim() + ", " + address2.getText().toString().trim() + ", " + address3.getText().toString().trim() + ", " + address4.getText().toString().trim();
-            if (TextUtils.isEmpty(Name) && TextUtils.isEmpty(Pincode) && TextUtils.isEmpty(Address)) {
+            final String City = staticSpinner.getSelectedItem().toString().trim();
+            final String Address = address1.getText().toString().trim() + ", " + address2.getText().toString().trim() + ", " + staticSpinner.getSelectedItem().toString();
+            if (TextUtils.isEmpty(Name) && TextUtils.isEmpty(Address)) {
                 Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please fill all the details", Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(Name)) {
                 Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please enter your name", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (TextUtils.isEmpty(Pincode)) {
-                Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please enter your pincode", Toast.LENGTH_SHORT).show();
+            }else if (staticSpinner.getSelectedItem().toString().equals("Select City")) {
+                progressDialog.dismiss();
+                Toast.makeText(UserDetailsActivity.this, "Please select your city", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (address1.getText().toString().isEmpty() || address2.getText().toString().isEmpty() || address3.getText().toString().isEmpty()) {
-                Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please complete the address", Toast.LENGTH_LONG).show();
-            } else if(email.getText().toString().isEmpty()){
-                Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please enter your Email", Toast.LENGTH_SHORT).show();
             }
-            else {
+            else if (address1.getText().toString().isEmpty() || address2.getText().toString().isEmpty()) {
+                Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please complete the address", Toast.LENGTH_LONG).show();
+            } else if (email.getText().toString().isEmpty()) {
+                Toast.makeText(com.mondkars.mondkarsproduct.UserDetailsActivity.this, "Please enter your Email", Toast.LENGTH_SHORT).show();
+            } else {
                 sendVerificationCode();
             }
-        }
-        if(view == verify){
-            progressDialog.setMessage("Checking for availability...");
-            progressDialog.show();
-            pincodes.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                        if(pincode.getText().toString().equals(dataSnapshot.getValue().toString())){
-                            progressDialog.cancel();
-                            new SweetAlertDialog(com.mondkars.mondkarsproduct.UserDetailsActivity.this)
-                                    .setTitleText("Go ahead!")
-                                    .setContentText("We are happy to serve in your area.")
-                                    .show();
-                            return;
-                        }
-                    }
-                    progressDialog.cancel();
-                    new SweetAlertDialog(com.mondkars.mondkarsproduct.UserDetailsActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("SORRY!")
-                            .setContentText("We are not serving in your area as of now.")
-                            .show();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                };
-            });
         }
     }
 
     private void sendVerificationCode() {
-        pincodes.addValueEventListener(new ValueEventListener() {
+        cities.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    if(pincode.getText().toString().equals(dataSnapshot.getValue().toString())){
+                    if(staticSpinner.getSelectedItem().toString().equals(dataSnapshot.getValue().toString())){
                         verifySignInCode();
                         return;
                     }

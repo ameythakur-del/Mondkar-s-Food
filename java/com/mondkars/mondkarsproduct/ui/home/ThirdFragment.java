@@ -35,15 +35,13 @@ import ui.SliderAdapterExample;
 
 public class ThirdFragment extends Fragment {
     public List<Item> itemList;
-    TextView text1, text2, text3, text4, text5;
-    View view1, view2, view3, view4, view5;
     public ItemRecyclerAdapter itemRecyclerAdapter;
     private ProgressBar progressBar;
     DatabaseReference reference, reference2, reference3;
     public SliderView horizontal;
     public List<Image> snacksList;
     DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Stop");
-    public RecyclerView recyclerView, recyclerView2, recyclerView3, recyclerView4, recyclerView5;
+    public RecyclerView recyclerView;
 
     @Nullable
     @Override
@@ -55,45 +53,16 @@ public class ThirdFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar3);
         progressBar.setVisibility(View.VISIBLE);
 
-        recyclerView = view.findViewById(R.id.view1);
-        recyclerView2 = view.findViewById(R.id.view2);
-        recyclerView3 = view.findViewById(R.id.view3);
-        recyclerView4 = view.findViewById(R.id.view4);
-        recyclerView5 = view.findViewById(R.id.view5);
-
-        view1 = view.findViewById(R.id.v1);
-        view2 = view.findViewById(R.id.v2);
-        view3 = view.findViewById(R.id.v3);
-        view4 = view.findViewById(R.id.v4);
-        view5 = view.findViewById(R.id.v5);
+        recyclerView = view.findViewById(R.id.view);
 
         reference2 = FirebaseDatabase.getInstance().getReference().child("padartha");
         reference = FirebaseDatabase.getInstance().getReference().child("items");
 
-        Query query1 = reference.orderByChild("subcategory").equalTo("Sandwiches");
-        Query query2 = reference.orderByChild("subcategory").equalTo("Milkshakes");
-        Query query3 = reference.orderByChild("subcategory").equalTo("Mojito");
-        Query query4 = reference.orderByChild("subcategory").equalTo("Beverages");
-        Query query5 = reference.orderByChild("subcategory").equalTo("Snacks");
+        Query query1 = reference.orderByChild("category").equalTo("Masalyache Padartha");
 
         recyclerView.setHasFixedSize(true);
-        recyclerView2.setHasFixedSize(true);
-        recyclerView3.setHasFixedSize(true);
-        recyclerView4.setHasFixedSize(true);
-        recyclerView5.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView3.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView4.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView5.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        text1 = view.findViewById(R.id.text1);
-        text2 = view.findViewById(R.id.text2);
-        text3 = view.findViewById(R.id.text3);
-        text4 = view.findViewById(R.id.text4);
-        text5 = view.findViewById(R.id.text5);
-
         horizontal = view.findViewById(R.id.horizontal_view3);
 
         LinearLayoutManager layoutManager
@@ -103,42 +72,7 @@ public class ThirdFragment extends Fragment {
         LinearLayoutManager ilayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        data.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue().toString().equals("True")) {
-                    {
-                        {
-                            {
-                                reference3.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        snacksList = new ArrayList<Image>();
-                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                            {
-                                                final Image image = dataSnapshot1.getValue(Image.class);
-                                                {
-                                                    snacksList.add(image);
-                                                }
-                                            }
-                                        }
-                                        SliderAdapterExample sliderAdapterExample = new SliderAdapterExample(getActivity(), snacksList);
-                                        horizontal.setSliderAdapter(sliderAdapterExample);
-                                        sliderAdapterExample.notifyDataSetChanged();
-                                        horizontal.startAutoCycle();
-                                        horizontal.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-                                        horizontal.setIndicatorAnimation(IndicatorAnimationType.SLIDE);
-                                        horizontal.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    }
-                                });
-                            }
-                        }
-                    }
-                } else {
+      {
                     {
                         {
                             {
@@ -164,20 +98,14 @@ public class ThirdFragment extends Fragment {
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Toast.makeText(getActivity(), "Nay hote", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), "Something wen't wrong", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
                         }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         {
             {
                 {
@@ -195,11 +123,6 @@ public class ThirdFragment extends Fragment {
                                     }
                                 }
                             }
-                            if (itemList.toString() != "[]") {
-                                text1.setVisibility(View.VISIBLE);
-                                view1.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                            }
                             itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                             progressBar.setVisibility(View.INVISIBLE);
                             recyclerView.setAdapter(itemRecyclerAdapter);
@@ -211,132 +134,7 @@ public class ThirdFragment extends Fragment {
                         }
                     });
                 }
-                {
-                    query2.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            itemList = new ArrayList<Item>();
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                {
-                                    Item ameya = dataSnapshot1.getValue(Item.class);
 
-                                    if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
-                                            itemList.add(ameya);
-                                        }
-                                    }
-                                }
-                            }
-                            if (itemList.toString() != "[]") {
-                                text2.setVisibility(View.VISIBLE);
-                                view2.setVisibility(View.VISIBLE);
-                                recyclerView2.setVisibility(View.VISIBLE);
-                            }
-                            itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            recyclerView2.setAdapter(itemRecyclerAdapter);
-                            itemRecyclerAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-                }
-                {
-                    query3.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            itemList = new ArrayList<Item>();
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                {
-                                    Item ameya = dataSnapshot1.getValue(Item.class);
-
-                                    if (dataSnapshot1.child("category").exists() && ameya.getVisibility()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha")) {
-                                            itemList.add(ameya);
-                                        }
-                                    }
-                                }
-                            }
-                            if (itemList.toString() != "[]") {
-                                text3.setVisibility(View.VISIBLE);
-                                view3.setVisibility(View.VISIBLE);
-                                recyclerView3.setVisibility(View.VISIBLE);
-                            }
-                            itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            recyclerView3.setAdapter(itemRecyclerAdapter);
-                            itemRecyclerAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-                }
-                {
-                    query4.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            itemList = new ArrayList<Item>();
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                {
-                                    Item ameya = dataSnapshot1.getValue(Item.class);
-                                    if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
-                                            itemList.add(ameya);
-                                        }
-                                    }
-                                }
-                            }
-                            if (itemList.toString() != "[]") {
-                                text4.setVisibility(View.VISIBLE);
-                                view4.setVisibility(View.VISIBLE);
-                                recyclerView4.setVisibility(View.VISIBLE);
-                            }
-                            itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            recyclerView4.setAdapter(itemRecyclerAdapter);
-                            itemRecyclerAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-                }
-                {
-                    query5.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            itemList = new ArrayList<Item>();
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                {
-                                    Item ameya = dataSnapshot1.getValue(Item.class);
-                                    if (dataSnapshot1.child("category").exists()) {
-                                        if (ameya.getCategory().equals("Masalyache Padartha") && ameya.getVisibility()) {
-                                            itemList.add(ameya);
-                                        }
-                                    }
-                                }
-                            }
-                            if (itemList.toString() != "[]") {
-                                text5.setVisibility(View.VISIBLE);
-                                view5.setVisibility(View.VISIBLE);
-                                recyclerView5.setVisibility(View.VISIBLE);
-                            }
-                            itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            recyclerView5.setAdapter(itemRecyclerAdapter);
-                            itemRecyclerAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-                }
                 return view;
             }
         }

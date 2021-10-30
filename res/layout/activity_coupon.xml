@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textFontWeight="20"
-                    android:text="Enter the mobile number of the user who have recommended you about the app"
+                    android:text="Enter the registered mobile number of the user who have recommended you about the app"
                     android:textColor="#000000"
                     android:textSize="20dp"/>
 
@@ -69,7 +69,7 @@
                     android:layout_marginTop="25dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="You can avail the refferal discount only on your first order."/>
+                    android:text="You can avail the referral discount only on your first order."/>
 
 
                 <TextView

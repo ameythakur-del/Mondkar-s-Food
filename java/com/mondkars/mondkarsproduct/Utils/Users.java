@@ -5,7 +5,7 @@ import android.app.Application;
 public class Users extends Application {
     private String Name;
     private String UserNumber;
-    private String Address, Pincode, email;
+    private String Address, City, email;
     private static Users instance;
 
     public static Users getInstance(){
@@ -16,12 +16,12 @@ public class Users extends Application {
 
     public Users(){}
 
-    public String getPincode() {
-        return Pincode;
+    public String getCity() {
+        return City;
     }
 
-    public void setPincode(String pincode) {
-        Pincode = pincode;
+    public void setCity(String city) {
+        City = city;
     }
 
     public String getName() {
