@@ -38,6 +38,21 @@
             app:sliderIndicatorUnselectedColor="#FFF"
             app:sliderScrollTimeInSec="4"
             app:sliderStartAutoCycle="true" />
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:id="@+id/free_recycle"/>
+
+
         <TextView
             android:visibility="gone"
             android:id="@+id/text1"

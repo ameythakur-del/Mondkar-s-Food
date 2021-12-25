@@ -1,5 +1,6 @@
 package com.mondkars.mondkarsproduct.ui.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mondkars.mondkarsproduct.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,21 +28,23 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import model.Image;
 import model.Item;
+import ui.FreeRecyclerAdapter;
 import ui.ItemRecyclerAdapter;
 import ui.SliderAdapterExample;
 
 public class FirstFragment extends Fragment {
     public List<Item> itemList;
-    public RecyclerView recyclerView, recyclerView2, recyclerView3, recyclerView4, recyclerView5, recyclerView6, recyclerView7, recyclerView8,recyclerView9,recyclerView10, recyclerView11, recyclerView12, recyclerView13, recyclerView14,  recyclerView15,  recyclerView16,  recyclerView17,  recyclerView18,  recyclerView19,  recyclerView20,  recyclerView21,  recyclerView22, recyclerView23, recyclerView24;
+    public RecyclerView freeRecycleView, recyclerView, recyclerView2, recyclerView3, recyclerView4, recyclerView5, recyclerView6, recyclerView7, recyclerView8,recyclerView9,recyclerView10, recyclerView11, recyclerView12, recyclerView13, recyclerView14,  recyclerView15,  recyclerView16,  recyclerView17,  recyclerView18,  recyclerView19,  recyclerView20,  recyclerView21,  recyclerView22, recyclerView23, recyclerView24;
     public ItemRecyclerAdapter itemRecyclerAdapter;
     public SliderView horizontal;
     public List<Image> snacksList;
     private ProgressBar progressBar;
-    DatabaseReference reference, reference2, reference3;
+    DatabaseReference reference, reference2, reference3, orderedUsers;
     TextView text1, text2, text3, text4, text5, text6, text7,text8, text9, text10, text11, text12, text13, text14, text15, text16, text17, text18, text19, text20, text21, text22, text23, text24;
     View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14, view15, view16, view17, view18, view19, view20, view21, view22, view23, view24;
     DatabaseReference data = FirebaseDatabase.getInstance().getReference().child("Stop");
@@ -52,10 +56,13 @@ public class FirstFragment extends Fragment {
             itemList = new ArrayList<>();
             snacksList = new ArrayList<>();
 
+            orderedUsers = FirebaseDatabase.getInstance().getReference().child("Ordered Users");
+
             progressBar = view.findViewById(R.id.progressBar3);
             progressBar.setVisibility(View.VISIBLE);
 
             horizontal = view.findViewById(R.id.horizontal_view);
+            freeRecycleView = view.findViewById(R.id.free_recycle);
             recyclerView = view.findViewById(R.id.view1);
             recyclerView2 = view.findViewById(R.id.view2);
             recyclerView3 = view.findViewById(R.id.view3);
@@ -134,6 +141,7 @@ public class FirstFragment extends Fragment {
         recyclerView24.setHasFixedSize(true);
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            freeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
             recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView3.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView4.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -289,6 +297,68 @@ public class FirstFragment extends Fragment {
 
                 }
             });
+
+            DatabaseReference freeReference = FirebaseDatabase.getInstance().getReference().child("Free items");
+
+            if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+                freeReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList freeItems = new ArrayList<Item>();
+                        for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                            Item item = dataSnapshot1.getValue(Item.class);
+                            freeItems.add(item);
+                        }
+                        FreeRecyclerAdapter freeRecyclerAdapter = new FreeRecyclerAdapter(getActivity(), freeItems);
+                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+                        freeRecycleView.setLayoutManager(llm);
+                        freeRecycleView.setAdapter(freeRecyclerAdapter);
+                        freeRecyclerAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+            else{
+                orderedUsers.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!snapshot.exists()){
+                            freeReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ArrayList freeItems = new ArrayList<Item>();
+                                    for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                                        Item item = dataSnapshot1.getValue(Item.class);
+                                        freeItems.add(item);
+                                    }
+                                    FreeRecyclerAdapter freeRecyclerAdapter = new FreeRecyclerAdapter(getActivity(), freeItems);
+                                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                                    llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+                                    freeRecycleView.setLayoutManager(llm);
+                                    freeRecycleView.setAdapter(freeRecyclerAdapter);
+                                    freeRecyclerAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
             {
                 {
                     {
@@ -311,6 +381,9 @@ public class FirstFragment extends Fragment {
                                     text1.setVisibility(View.VISIBLE);
                                     view1.setVisibility(View.VISIBLE);
                                     recyclerView.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -344,6 +417,9 @@ public class FirstFragment extends Fragment {
                                     view2.setVisibility(View.VISIBLE);
                                     recyclerView2.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView2.setAdapter(itemRecyclerAdapter);
@@ -376,6 +452,12 @@ public class FirstFragment extends Fragment {
                                     view3.setVisibility(View.VISIBLE);
                                     recyclerView3.setVisibility(View.VISIBLE);
                                 }
+
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
+
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView3.setAdapter(itemRecyclerAdapter);
@@ -406,6 +488,9 @@ public class FirstFragment extends Fragment {
                                     text4.setVisibility(View.VISIBLE);
                                     view4.setVisibility(View.VISIBLE);
                                     recyclerView4.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -438,6 +523,9 @@ public class FirstFragment extends Fragment {
                                     view5.setVisibility(View.VISIBLE);
                                     recyclerView5.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView5.setAdapter(itemRecyclerAdapter);
@@ -468,6 +556,9 @@ public class FirstFragment extends Fragment {
                                     text6.setVisibility(View.VISIBLE);
                                     view6.setVisibility(View.VISIBLE);
                                     recyclerView6.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -500,6 +591,9 @@ public class FirstFragment extends Fragment {
                                     view7.setVisibility(View.VISIBLE);
                                     recyclerView7.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView7.setAdapter(itemRecyclerAdapter);
@@ -530,6 +624,9 @@ public class FirstFragment extends Fragment {
                                     text8.setVisibility(View.VISIBLE);
                                     view8.setVisibility(View.VISIBLE);
                                     recyclerView8.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -562,6 +659,9 @@ public class FirstFragment extends Fragment {
                                     view9.setVisibility(View.VISIBLE);
                                     recyclerView9.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView9.setAdapter(itemRecyclerAdapter);
@@ -592,6 +692,9 @@ public class FirstFragment extends Fragment {
                                     text10.setVisibility(View.VISIBLE);
                                     view10.setVisibility(View.VISIBLE);
                                     recyclerView10.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -624,6 +727,9 @@ public class FirstFragment extends Fragment {
                                     view11.setVisibility(View.VISIBLE);
                                     recyclerView11.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView11.setAdapter(itemRecyclerAdapter);
@@ -655,6 +761,9 @@ public class FirstFragment extends Fragment {
                                     view12.setVisibility(View.VISIBLE);
                                     recyclerView12.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView12.setAdapter(itemRecyclerAdapter);
@@ -685,6 +794,9 @@ public class FirstFragment extends Fragment {
                                     text13.setVisibility(View.VISIBLE);
                                     view13.setVisibility(View.VISIBLE);
                                     recyclerView13.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -718,6 +830,9 @@ public class FirstFragment extends Fragment {
                                     view14.setVisibility(View.VISIBLE);
                                     recyclerView14.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView14.setAdapter(itemRecyclerAdapter);
@@ -749,6 +864,9 @@ public class FirstFragment extends Fragment {
                                     text15.setVisibility(View.VISIBLE);
                                     view15.setVisibility(View.VISIBLE);
                                     recyclerView15.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -782,6 +900,9 @@ public class FirstFragment extends Fragment {
                                     view16.setVisibility(View.VISIBLE);
                                     recyclerView16.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView16.setAdapter(itemRecyclerAdapter);
@@ -813,6 +934,9 @@ public class FirstFragment extends Fragment {
                                     text18.setVisibility(View.VISIBLE);
                                     view18.setVisibility(View.VISIBLE);
                                     recyclerView18.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -846,6 +970,9 @@ public class FirstFragment extends Fragment {
                                     view19.setVisibility(View.VISIBLE);
                                     recyclerView19.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView19.setAdapter(itemRecyclerAdapter);
@@ -877,6 +1004,9 @@ public class FirstFragment extends Fragment {
                                     text20.setVisibility(View.VISIBLE);
                                     view20.setVisibility(View.VISIBLE);
                                     recyclerView20.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -910,6 +1040,9 @@ public class FirstFragment extends Fragment {
                                     view21.setVisibility(View.VISIBLE);
                                     recyclerView21.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView21.setAdapter(itemRecyclerAdapter);
@@ -941,6 +1074,9 @@ public class FirstFragment extends Fragment {
                                     text22.setVisibility(View.VISIBLE);
                                     view22.setVisibility(View.VISIBLE);
                                     recyclerView22.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
@@ -974,6 +1110,9 @@ public class FirstFragment extends Fragment {
                                     view23.setVisibility(View.VISIBLE);
                                     recyclerView23.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView23.setAdapter(itemRecyclerAdapter);
@@ -1006,6 +1145,9 @@ public class FirstFragment extends Fragment {
                                     view24.setVisibility(View.VISIBLE);
                                     recyclerView24.setVisibility(View.VISIBLE);
                                 }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
+                                }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 recyclerView24.setAdapter(itemRecyclerAdapter);
@@ -1037,6 +1179,9 @@ public class FirstFragment extends Fragment {
                                     text17.setVisibility(View.VISIBLE);
                                     view17.setVisibility(View.VISIBLE);
                                     recyclerView17.setVisibility(View.VISIBLE);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemList.sort(Comparator.comparing(Item::getRank));
                                 }
                                 itemRecyclerAdapter = new ItemRecyclerAdapter(getActivity(), itemList);
                                 progressBar.setVisibility(View.INVISIBLE);

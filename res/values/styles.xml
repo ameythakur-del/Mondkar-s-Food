@@ -167,4 +167,12 @@
         <item name="colorAccent">#ED5A6B</item>
     </style>
 
+    <style name="FreeItems" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <item name="colorPrimary">#b83d0f </item>
+        <item name="title">Order Free Items</item>
+        <item name="android:statusBarColor">#A52A2A</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="colorAccent">#ED5A6B</item>
+    </style>
+
 </resources>

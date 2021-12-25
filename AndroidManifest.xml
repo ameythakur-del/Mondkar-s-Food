@@ -28,6 +28,12 @@
         <activity
             android:name=".Update"
             android:theme="@style/UpdateActivity" />
+        <activity android:name=".ui.home.FreeFragment"
+            android:theme="@style/FreeItems">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mondkars.mondkarsproduct.ui.home.FreeFragment" />
+        </activity>
         <activity
             android:name=".TrackActivity"
             android:theme="@style/TrackActivity">

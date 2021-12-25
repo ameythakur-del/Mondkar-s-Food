@@ -13,6 +13,7 @@ public class Item {
     private String original;
     private String available;
     private Boolean visibility;
+    private int rank;
 
     public Item() {
     }
@@ -108,5 +109,13 @@ public class Item {
 
     public void setVisibility(Boolean visibility) {
         this.visibility = visibility;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

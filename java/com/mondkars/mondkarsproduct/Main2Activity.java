@@ -132,70 +132,70 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-//
-//        if(user != null){
-//            collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                @Override
-//                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-//                    if(value.getString("City") != null) {
-//                        if (value.getString("City").equals("Sawantwadi")) {
-//                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
-//                            databaseReference.addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    if(snapshot.exists()){
-//                                        SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
-//                                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-//                                        menu.getItem(0).setTitle(s);
-//                                    }
-//                                    else{
-//                                        SpannableString s = new SpannableString("Earnings");
-//                                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-//                                        menu.getItem(0).setTitle(s);
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                }
-//                            });
-//                        }
-//                        else {
-//                            menu.getItem(0).setVisible(false);
-//                        }
-//                    }
-//                    else{
-//                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
-//                        databaseReference.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                if(snapshot.exists()){
-//                                    SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
-//                                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-//                                    menu.getItem(0).setTitle(s);
-//                                }
-//                                else{
-//                                    SpannableString s = new SpannableString("Earnings");
-//                                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-//                                    menu.getItem(0).setTitle(s);
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                            }
-//                        });
-//                    }
-//                }
-//            });
-//        }
-//        else{
-//            SpannableString s = new SpannableString("Earnings");
-//            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-//            menu.getItem(0).setTitle(s);
-//        }
+
+        if(user != null){
+            collectionReference.document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if(value.getString("City") != null) {
+                        if (value.getString("City").equals("Sawantwadi")) {
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
+                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
+                                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                                        menu.getItem(0).setTitle(s);
+                                    }
+                                    else{
+                                        SpannableString s = new SpannableString("Earnings");
+                                        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                                        menu.getItem(0).setTitle(s);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                        else {
+                            menu.getItem(0).setVisible(false);
+                        }
+                    }
+                    else{
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Marketers").child(user.getPhoneNumber());
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    SpannableString s = new SpannableString("Earnings: "+"\u20B9" + snapshot.child("money").getValue().toString());
+                                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                                    menu.getItem(0).setTitle(s);
+                                }
+                                else{
+                                    SpannableString s = new SpannableString("Earnings");
+                                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                                    menu.getItem(0).setTitle(s);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else{
+            SpannableString s = new SpannableString("Earnings");
+            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+            menu.getItem(0).setTitle(s);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }

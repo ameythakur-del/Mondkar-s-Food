@@ -196,7 +196,7 @@ public class MyCart extends AppCompatActivity {
                                                 myCart.add(ameya);
                                             }
                                         }
-                                        if (cost == 0) {
+                                        if (myCart.size() == 0) {
                                             progressBar.setVisibility(View.INVISIBLE);
                                             empty.setVisibility(View.VISIBLE);
                                             cartIcon.setVisibility(View.VISIBLE);

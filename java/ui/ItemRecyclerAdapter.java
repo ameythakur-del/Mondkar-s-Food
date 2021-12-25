@@ -238,6 +238,9 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                         databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                         databaseReference.setValue(cartItem);
                                         Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
+                                        if(item.getPrice().equals("0")){
+                                            ((Activity)context).finish();
+                                        }
                                     } else {
                                         Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
                                     }
@@ -268,6 +271,9 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                         databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                         databaseReference.setValue(cartItem);
                                         Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
+                                        if(item.getPrice().equals("0")){
+                                            ((Activity)context).finish();
+                                        }
                                     } else {
                                         Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
                                     }
@@ -280,7 +286,9 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
                         }
                     });
-                } else {
+                }
+
+                else {
                     Toast.makeText(context, "You need to log in first !", Toast.LENGTH_LONG).show();
                     ((Activity)context).finish();
                 }
@@ -324,7 +332,12 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                             cartItem.setTime(currentDateTimeString);
                                             databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                             databaseReference.setValue(cartItem);
-                                            context.startActivity(new Intent(context, MyCart.class));
+                                            if (item.getPrice().equals("0")) {
+                                                ((Activity) context).finish();
+                                                Toast.makeText(context, "Item is added to the cart", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                context.startActivity(new Intent(context, MyCart.class));
+                                            }
                                         }
                                         else {
                                             Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
@@ -355,7 +368,13 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                                             cartItem.setTime(currentDateTimeString);
                                             databaseReference = FirebaseDatabase.getInstance().getReference().child("cart").child(user.getPhoneNumber().toString() + cartItem.getItem());
                                             databaseReference.setValue(cartItem);
-                                            context.startActivity(new Intent(context, MyCart.class));
+                                            if(item.getPrice().equals("0")){
+                                                ((Activity)context).finish();
+                                                Toast.makeText(context, "Item is added to the cart", Toast.LENGTH_LONG).show();
+                                            }
+                                            else {
+                                                context.startActivity(new Intent(context, MyCart.class));
+                                            }
                                         }
                                         else {
                                             Toast.makeText(context, "Please select the number of items you want to buy", Toast.LENGTH_LONG).show();
@@ -369,7 +388,8 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
                             }
                         });
-                    } else {
+                    }
+                    else {
                         Toast.makeText(context, "You need to log in first !", Toast.LENGTH_LONG).show();
                         ((Activity)context).finish();
                     }

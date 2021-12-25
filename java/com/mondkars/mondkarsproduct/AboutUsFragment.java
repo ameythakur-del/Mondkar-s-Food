@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.mondkars.mondkarsproduct.R;
 
@@ -14,6 +15,7 @@ public class AboutUsFragment  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_us_fragment);
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         WebView view = (WebView) findViewById(R.id.textContent);
         String text;

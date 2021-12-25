@@ -125,6 +125,7 @@ public class HomeFragment extends Fragment {
                                                 adapter.AddFragment(new SecondFragment(), spices);
                                                 adapter.AddFragment(new ThirdFragment(), special);
 
+
                                                 Log.d("HomeFragment", "onEvent: 1");
 
                                                 viewPager.setAdapter(adapter);
@@ -134,6 +135,7 @@ public class HomeFragment extends Fragment {
                                             else{
                                                 ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
                                                 adapter.AddFragment(new ThirdFragment(), special);
+
                                                 Log.d("HomeFragment", "onEvent: 4");
 
                                                 viewPager.setAdapter(adapter);
@@ -146,6 +148,7 @@ public class HomeFragment extends Fragment {
                                             adapter.AddFragment(new FirstFragment(), meal);
                                             adapter.AddFragment(new SecondFragment(), spices);
                                             adapter.AddFragment(new ThirdFragment(), special);
+
                                             Log.d("HomeFragment", "onEvent: 2");
 
                                             viewPager.setAdapter(adapter);
@@ -160,6 +163,7 @@ public class HomeFragment extends Fragment {
                                 adapter.AddFragment(new FirstFragment(), meal);
                                 adapter.AddFragment(new SecondFragment(), spices);
                                 adapter.AddFragment(new ThirdFragment(), special);
+
                                 Log.d("HomeFragment", "onDataChange: 3");
 
                                 viewPager.setAdapter(adapter);
